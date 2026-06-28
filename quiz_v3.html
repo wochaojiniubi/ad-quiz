@@ -3,366 +3,777 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>题库</title>
+<title>题库练习</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f9fa;color:#212529;min-height:100vh;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
-
-/* Top bar */
-.topbar{position:sticky;top:0;z-index:20;background:#fff;padding:10px 14px 6px;border-bottom:1px solid #eee}
-.topbar h1{font-size:15px;font-weight:600;text-align:center;margin-bottom:8px}
-.topbar .row{display:flex;align-items:center;justify-content:space-between;font-size:12px;color:#666}
-.topbar .row b{color:#333}
-.topbar .home{font-size:12px;color:#999;text-decoration:none}
-
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;color:#333;min-height:100vh;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+.header{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #e0e0e0;padding:8px 12px}
+.header h1{font-size:14px;text-align:center;color:#666;margin-bottom:6px}
+.stats{display:flex;justify-content:space-around;font-size:12px;margin-bottom:6px}
+.stats span{font-weight:600}.stats .c{color:#4caf50}.stats .w{color:#f44336}
+.pbar{height:3px;background:#e0e0e0;border-radius:2px;overflow:hidden}.pbar-fill{height:100%;background:#1976d2;transition:width .3s}
 /* Modes */
-.modes{display:flex;gap:6px;padding:8px 14px;background:#fff;border-bottom:1px solid #eee;overflow-x:auto;position:sticky;top:68px;z-index:19}
-.modes button{flex-shrink:0;padding:7px 14px;border:1px solid #dee2e6;background:#fff;border-radius:20px;font-size:13px;cursor:pointer;color:#495057}
-.modes button.on{background:#212529;color:#fff;border-color:#212529}
-.modes button.exam{background:#f59e0b;color:#fff;border-color:#f59e0b}
-.modes button.exam.on{background:#d97706}
-
-/* Sub bar */
-.subbar{display:flex;align-items:center;gap:6px;padding:6px 14px;background:#fff;border-bottom:1px solid #eee;font-size:12px;position:sticky;top:118px;z-index:18;justify-content:space-between}
-.subbar .filter{display:flex;gap:4px;overflow-x:auto}
-.subbar .filter button{flex-shrink:0;padding:3px 10px;border:1px solid #eee;background:#fff;border-radius:12px;font-size:11px;color:#888;cursor:pointer}
-.subbar .filter button.on{background:#212529;color:#fff;border-color:#212529}
-.subbar .actions{display:flex;gap:8px;font-size:11px;color:#888}
-.subbar .actions span{cursor:pointer}
-.subbar .actions span.danger{color:#e03131}
-
-/* Exam status */
-.exam-status{display:none;padding:6px 14px;background:#fffbeb;border-bottom:1px solid #fde68a;font-size:12px;text-align:center;position:sticky;top:156px;z-index:18}
-.exam-status.show{display:block}
-
-/* Main */
-.main{padding:12px 14px 100px;max-width:720px;margin:0 auto}
-
-/* Card */
-.qcard{background:#fff;border-radius:12px;padding:18px;margin-bottom:12px;box-shadow:0 1px 2px rgba(0,0,0,.04);position:relative;border:1px solid #eee}
-.qcard.answered{border-color:#d1fae5}
-.qcard.failed{border-color:#fee2e2}
-.qheader{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.qnum{font-size:14px;font-weight:700}
-.qbadges{display:flex;gap:6px;font-size:10px}
-.qbadges span{padding:2px 8px;border-radius:10px}
-.badge-type{background:#e0e7ff;color:#4338ca}
-.badge-mod{background:#f3e8ff;color:#7e22ce}
-.badge-hot{background:#fee2e2;color:#dc2626}
-.qtext{font-size:15px;line-height:1.7;margin-bottom:14px;color:#1a1a1a}
-
-/* Options */
-.options{display:flex;flex-direction:column;gap:8px}
-.opt{display:flex;align-items:flex-start;padding:12px 14px;border:1px solid #e5e7eb;border-radius:10px;cursor:pointer;transition:.12s;font-size:14px;line-height:1.5}
-.opt:active{background:#f9fafb}
-.opt .lb{flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:12px;margin-right:10px;color:#6b7280}
-.opt.ok{border-color:#22c55e;background:#f0fdf4}.opt.ok .lb{background:#22c55e;color:#fff}
-.opt.bad{border-color:#ef4444;background:#fef2f2}.opt.bad .lb{background:#ef4444;color:#fff}
-.opt.reveal{border-color:#22c55e;background:#f0fdf4}.opt.reveal .lb{background:#22c55e;color:#fff}
-.opt.fade{opacity:.45}
-
-/* Feedback */
-.fb{margin-top:10px;padding:10px 14px;border-radius:8px;font-size:13px;line-height:1.6;display:none}
-.fb.show{display:block}
-.fb.good{background:#f0fdf4;color:#166534}
-.fb.bad{background:#fef2f2;color:#991b1b}
-.fb .fbl{font-weight:600;margin-bottom:4px}
-.fb .fbmod{font-size:11px;color:#7e22ce;margin-top:6px}
-.retry{display:inline-block;margin-top:8px;font-size:12px;color:#3b82f6;cursor:pointer}
-
-/* Cut */
-.cut{position:absolute;top:10px;right:10px;font-size:11px;padding:3px 10px;border:1px solid #f59e0b;background:#fff;color:#f59e0b;border-radius:12px;cursor:pointer;z-index:2}
-.cut.on{background:#f59e0b;color:#fff}
-
+.modes{display:flex;gap:4px;padding:6px 12px;background:#fff;border-bottom:1px solid #e0e0e0;position:sticky;top:72px;z-index:9;overflow-x:auto}
+.modes button{flex-shrink:0;padding:6px 12px;border:1px solid #ddd;background:#fff;border-radius:14px;font-size:12px;cursor:pointer;white-space:nowrap}
+.modes button.active{background:#1976d2;color:#fff;border-color:#1976d2}
+.modes button.exam-mode{background:#ff9800;color:#fff;border-color:#ff9800}
+.modes button.exam-mode.active{background:#e65100}
+/* Exam bar */
+.exam-bar{display:none;padding:6px 12px;background:#fff3e0;border-bottom:1px solid #ffe0b2;font-size:12px;text-align:center;position:sticky;top:116px;z-index:8}
+.exam-bar.show{display:block}
+.exam-bar b{color:#e65100}
+/* Filter */
+.filter{display:flex;gap:4px;padding:6px 12px;background:#fff;border-bottom:1px solid #e0e0e0;overflow-x:auto;position:sticky;top:140px;z-index:7}
+.filter button{flex-shrink:0;padding:4px 10px;border:1px solid #ddd;background:#fff;border-radius:12px;font-size:11px;cursor:pointer}
+.filter button.active{background:#1976d2;color:#fff;border-color:#1976d2}
+.main{padding:8px 8px 100px}
+.qcard{background:#fff;border-radius:10px;padding:14px;margin-bottom:8px;box-shadow:0 1px 3px rgba(0,0,0,.08);position:relative}
+.qcard.cut{border-left:3px solid #ff9800;opacity:.6}
+.qcard.correct{border-left:3px solid #4caf50}.qcard.wrong{border-left:3px solid #f44336}
+.qheader{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.qnum{font-size:13px;font-weight:700;color:#1976d2}
+.qbadges{display:flex;gap:4px;font-size:10px}
+.qbadges span{padding:1px 6px;border-radius:8px}
+.qtype{background:#e3f2fd;color:#1976d2}
+.qmodule{background:#f3e5f5;color:#7b1fa2}
+.qtext{font-size:14px;line-height:1.6;margin-bottom:10px;color:#222}
+.options{display:flex;flex-direction:column;gap:6px}
+.option{display:flex;align-items:flex-start;padding:10px 12px;border:2px solid #e8e8e8;border-radius:8px;cursor:pointer;transition:all .1s;font-size:13px;line-height:1.5}
+.option:active{transform:scale(.98)}
+.option .label{flex-shrink:0;width:24px;height:24px;border-radius:50%;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;margin-right:8px;color:#666}
+.option.correct{border-color:#4caf50;background:#e8f5e9}.option.correct .label{background:#4caf50;color:#fff}
+.option.wrong{border-color:#f44336;background:#ffebee}.option.wrong .label{background:#f44336;color:#fff}
+.option.reveal{border-color:#4caf50;background:#f1f8e9}.option.reveal .label{background:#4caf50;color:#fff}
+.option.dim{opacity:.5}
+.feedback{margin-top:8px;padding:8px 12px;border-radius:6px;font-size:12px;line-height:1.5;display:none}
+.feedback.show{display:block}
+.feedback.ok{background:#e8f5e9;color:#2e7d32}
+.feedback.no{background:#ffebee;color:#c62828}
+.feedback .fb-label{font-weight:700;margin-bottom:4px}
+.feedback .fb-module{font-size:11px;color:#7b1fa2;margin-top:4px}
+.cut-btn{position:absolute;top:8px;right:8px;font-size:11px;padding:4px 8px;border:1px solid #ff9800;background:#fff;color:#ff9800;border-radius:10px;cursor:pointer;z-index:2}
+.cut-btn.cut{background:#ff9800;color:#fff}
+.retry-btn{margin-top:6px;padding:4px 12px;background:#1976d2;color:#fff;border:none;border-radius:4px;font-size:12px;cursor:pointer}
 /* Bottom */
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #eee;padding:10px 16px;display:flex;align-items:center;z-index:20;gap:10px}
-.bottom .btn{flex:1;padding:12px;border:1px solid #d1d5db;background:#fff;color:#374151;border-radius:10px;font-size:14px;cursor:pointer;text-align:center}
-.bottom .btn:active{background:#f3f4f6}
-.bottom .btn.primary{background:#111;color:#fff;border-color:#111}
-.bottom .pos{font-size:13px;color:#9ca3af;text-align:center;min-width:60px}
-
-/* Drawer */
-.drawer{position:fixed;top:0;right:-300px;width:280px;height:100%;background:#fff;z-index:200;transition:right .3s;box-shadow:-2px 0 12px rgba(0,0,0,.1);overflow-y:auto;padding:20px}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e0e0e0;padding:8px 12px;display:flex;justify-content:space-between;align-items:center;z-index:10;gap:8px}
+.bottom-nav button{flex:1;padding:8px;border:1px solid #1976d2;background:#fff;color:#1976d2;border-radius:6px;font-size:13px;cursor:pointer}
+.bottom-nav button:active{opacity:.7}
+.bottom-nav button.primary{background:#1976d2;color:#fff}
+.bottom-nav .pi{font-size:12px;color:#999;text-align:center;min-width:60px}
+/* Settings drawer */
+.drawer{position:fixed;top:0;right:-300px;width:280px;height:100%;background:#fff;z-index:100;transition:right .3s;box-shadow:-2px 0 8px rgba(0,0,0,.2);overflow-y:auto;padding:16px}
 .drawer.open{right:0}
-.drawer h3{font-size:15px;margin-bottom:14px}
-.drawer .item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f3f4f6;font-size:13px}
-.drawer .item button{font-size:11px;padding:3px 10px;border:1px solid #22c55e;background:#fff;color:#22c55e;border-radius:10px;cursor:pointer}
-.mask{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:199}
-.mask.show{display:block}
-.gear{position:fixed;bottom:80px;right:16px;width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid #e5e7eb;font-size:18px;cursor:pointer;z-index:50;box-shadow:0 2px 6px rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center}
-
-/* Modal */
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:300;align-items:center;justify-content:center}
-.modal.show{display:flex}
-.modal .box{background:#fff;border-radius:14px;padding:24px;max-width:320px;width:92%}
-.modal .box h3{margin-bottom:14px;font-size:16px}
-.modal .box label{font-size:13px;color:#666;display:block;margin-top:8px}
-.modal .box select,.modal .box input{width:100%;padding:10px;margin:4px 0 12px;border:1px solid #e5e7eb;border-radius:8px;font-size:14px;background:#f9fafb}
-.modal .box .btns{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
-.modal .box .btns button{padding:10px 20px;border:none;border-radius:8px;font-size:14px;cursor:pointer}
-.modal .box .b-cancel{background:#f3f4f6;color:#374151}
-.modal .box .b-ok{background:#111;color:#fff}
-
+.drawer h3{font-size:15px;margin-bottom:12px}
+.drawer .cut-item{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #eee;font-size:13px}
+.drawer .restore-btn{font-size:11px;padding:2px 8px;border:1px solid #4caf50;background:#fff;color:#4caf50;border-radius:8px;cursor:pointer}
+.overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.3);z-index:99}
+.overlay.show{display:block}
+.settings-btn{position:fixed;bottom:70px;right:12px;width:36px;height:36px;border-radius:50%;background:#fff;border:1px solid #ddd;font-size:18px;cursor:pointer;z-index:50;box-shadow:0 2px 4px rgba(0,0,0,.2)}
 /* Exam result */
-.exam-rst{display:none;text-align:center;padding:40px 20px;max-width:500px;margin:0 auto}
-.exam-rst.show{display:block}
-.exam-rst h2{font-size:22px;margin-bottom:8px}
-.exam-rst .big{font-size:56px;font-weight:700;color:#111}
-.exam-rst .big span{font-size:22px;color:#999;font-weight:400}
-.exam-rst .info{margin:16px 0;font-size:14px;color:#666;line-height:1.8}
-.exam-rst .wrongs{text-align:left;margin-top:20px;font-size:13px}
-.exam-rst .wrongs div{margin:6px 0;line-height:1.5}
+.exam-result{text-align:center;padding:40px 20px;display:none}
+.exam-result.show{display:block}
+.exam-result h2{font-size:24px;margin-bottom:8px}
+.exam-result .score{font-size:48px;font-weight:700;color:#1976d2}
+.exam-result .detail{margin-top:16px;font-size:14px;color:#666}
+.exam-result .wrong-list{text-align:left;margin-top:16px;font-size:13px}
+/* Modal */
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:200;justify-content:center;align-items:center}
+.modal.show{display:flex}
+.modal-box{background:#fff;border-radius:12px;padding:24px;max-width:320px;width:90%}
+.modal-box h3{margin-bottom:12px}
+.modal-box input,.modal-box select{width:100%;padding:8px;margin:6px 0;border:1px solid #ddd;border-radius:6px;font-size:14px}
+.modal-box button{padding:10px 20px;margin:6px 4px;border:none;border-radius:6px;font-size:14px;cursor:pointer}
+.modal-box .btn-primary{background:#1976d2;color:#fff}.modal-box .btn-cancel{background:#eee;color:#333}
+/* Home button */
+.home-btn{font-size:11px;padding:4px 8px;border:1px solid #999;background:#fff;color:#999;border-radius:8px;cursor:pointer;text-decoration:none}
+@media(min-width:768px){.main{max-width:720px;margin:0 auto}}
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-    <a class="home" href="index.html">← 首页</a>
-    <h1 id="t">题库</h1>
+<div class="header">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <a class="home-btn" href="index.html">← 首页</a>
+    <h1 id="quizTitle">题库练习</h1>
     <span style="width:40px"></span>
   </div>
-  <div class="row">
-    <span>进度 <b id="an">0</b>/<b id="tn">0</b></span>
-    <span style="color:#22c55e">✓ <b id="cc">0</b></span>
-    <span style="color:#ef4444">✗ <b id="wc">0</b></span>
-    <span style="color:#f59e0b">斩 <b id="cutc">0</b></span>
+  <div class="stats">
+    <span>已答 <b id="an">0</b>/<b id="tn">0</b></span>
+    <span class="c">✓ <b id="cc">0</b></span>
+    <span class="w">✗ <b id="wc">0</b></span>
+    <span style="color:#ff9800">斩 <b id="cutc">0</b></span>
   </div>
+  <div class="pbar"><div class="pbar-fill" id="pf" style="width:0%"></div></div>
 </div>
 
 <div class="modes" id="modes">
-  <button data-mode="sequential" class="on">顺序</button>
-  <button data-mode="random">随机</button>
-  <button data-mode="wrong">错题</button>
-  <button data-mode="exam" class="exam">模拟考试</button>
+  <button data-mode="sequential" class="active">顺序练习</button>
+  <button data-mode="random">随机练习</button>
+  <button data-mode="wrong">错题库</button>
+  <button data-mode="exam" class="exam-mode">模拟考试</button>
 </div>
 
-<div class="subbar">
-  <div class="filter">
-    <button data-filter="all" class="on">全部</button>
-    <button data-filter="unanswered">未答</button>
-    <button data-filter="wrong">答错</button>
-    <button data-filter="high-error">易错</button>
-  </div>
-  <div class="actions">
-    <span class="danger" id="clearBtn">清空</span>
-  </div>
+<div class="exam-bar" id="examBar">
+  <b>模拟考试</b> · 单选60% 多选30% 判断10% · 共 <b id="examTotal">0</b> 题 · 满分 <b id="examMax">0</b> 分 · 剩余 <b id="examRemain">0</b> 题
+  <button style="margin-left:8px;font-size:11px;padding:2px 8px;background:#e65100;color:#fff;border:none;border-radius:4px;cursor:pointer" id="submitExam">交卷</button>
 </div>
 
-<div class="exam-status" id="examBar">
-  模拟考试 · <b id="examTotal">0</b>题 · 满分<b id="examMax">0</b> · 剩余<b id="examRemain">0</b>
-  <span style="margin-left:8px;color:#d97706;font-weight:600;cursor:pointer" id="submitExam">交卷</span>
+<div class="filter">
+  <button class="active" data-filter="all">全部</button>
+  <button data-filter="unanswered">未答</button>
+  <button data-filter="wrong">错题</button>
+  <button data-filter="answered">已答</button>
+  <button data-filter="high-error">高频易错</button>
+  <button id="clearBtn" style="color:#f44336;border-color:#f44336">清空进度</button>
 </div>
 
 <div class="main" id="main"></div>
-<div class="exam-rst" id="examResult"></div>
+<div class="exam-result" id="examResult"></div>
 
-<div class="bottom" id="bottomNav">
-  <button class="btn" id="prevBtn">← 上一题</button>
-  <span class="pos" id="pi">1/1</span>
-  <button class="btn primary" id="nextBtn">下一题 →</button>
+<div class="bottom-nav" id="bottomNav">
+  <button id="prevBtn">← 上一题</button>
+  <span class="pi" id="pi">1/1</span>
+  <button id="nextBtn" class="primary">下一题 →</button>
 </div>
 
-<div class="gear" id="settingsBtn">⚙</div>
-<div class="mask" id="mask"></div>
+<button class="settings-btn" id="settingsBtn">⚙</button>
+<div class="overlay" id="overlay"></div>
 <div class="drawer" id="drawer">
-  <h3>已斩题目</h3>
+  <h3>⚙ 已斩题目</h3>
   <div id="cutList"></div>
-  <button style="margin-top:14px;width:100%;padding:10px;background:#ef4444;color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer" id="restoreAll">恢复全部</button>
+  <button style="margin-top:12px;width:100%;padding:8px;background:#f44336;color:#fff;border:none;border-radius:6px;cursor:pointer" id="restoreAll">恢复全部</button>
 </div>
 
+<!-- Exam config modal -->
 <div class="modal" id="examModal">
-  <div class="box">
-    <h3>模拟考试</h3>
+  <div class="modal-box">
+    <h3>模拟考试设置</h3>
     <label>题目数量</label>
-    <select id="examQCount"><option value="50">50 题</option><option value="100" selected>100 题</option><option value="150">150 题</option><option value="0">全部</option></select>
-    <label>时间（分钟，0=不限）</label>
+    <select id="examQCount"><option value="50">50题</option><option value="100" selected>100题</option><option value="150">150题</option><option value="0">全部</option></select>
+    <label>时间限制（分钟，0=不限）</label>
     <input type="number" id="examTime" value="0" min="0">
-    <div class="btns">
-      <button class="b-cancel" onclick="closeExamModal()">取消</button>
-      <button class="b-ok" onclick="startExam()">开始</button>
+    <div style="text-align:right;margin-top:12px">
+      <button class="btn-cancel" onclick="closeExamModal()">取消</button>
+      <button class="btn-primary" onclick="startExam()">开始考试</button>
     </div>
   </div>
 </div>
 
 <script>
+// ===== DATA =====
 var QUESTIONS = [{"q": 1, "text": "第一次见客户，认真整理材料、正式着装，是利用了“投射效应”来获取客户认同。", "options": [{"label": "A", "text": "对"}, {"label": "B", "text": "错"}], "answer": "B", "explanation": "", "type": "tf", "module": "08 职业素养", "moduleId": 8}, {"q": 2, "text": "在广告监测中，检测链接或监测系统出问题有可能导致广告转化成本偏高", "options": [{"label": "A", "text": "对"}, {"label": "B", "text": "错"}], "answer": "A", "explanation": "", "type": "tf", "module": "07 数据分析", "moduleId": 7}, {"q": 3, "text": "CPM的含义是：", "options": [{"label": "A", "text": "广告点击一千次所需要的展示"}, {"label": "B", "text": "广告展示一千次所需要的成本"}, {"label": "C", "text": "广告下载一千次所需要的点击"}, {"label": "D", "text": "以上都错误"}], "answer": "B", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 4, "text": "下列关于计费方式，描述错误的是：", "options": [{"label": "A", "text": "CPC：每次点击价格=下一位eCPM/预估CTR"}, {"label": "B", "text": "oCPM：每千次展示扣费=下一位eCPM+0.01"}, {"label": "C", "text": "PA：每转化扣费=下一位eCPM/(预估CTR*预估CVR）+0.01"}, {"label": "D", "text": "CPV：每次播放价格=下一位eCPM/预估播放率+0.01"}], "answer": "A", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 5, "text": "关于团队历史合作客户部分的呈现，下列说法错误的是：", "options": [{"label": "A", "text": "重点列举广告主所在行业的客户合作情况"}, {"label": "B", "text": "重点列举广告主所在行业TOP客户/主要竞对"}, {"label": "C", "text": "重点呈现出历史合作客户的数量，行业不限，越多越好"}, {"label": "D", "text": "重点呈现出跟客户的合作年限、合作业务额、客户满意度"}], "answer": "C", "explanation": "", "type": "single", "module": "05 客户营销与提案", "moduleId": 5}, {"q": 6, "text": "在工作沟通中，下列属于高效倾听关键点的是：", "options": [{"label": "A", "text": "减少提问"}, {"label": "B", "text": "积极回应"}, {"label": "C", "text": "共同探讨"}, {"label": "D", "text": "客户至上"}], "answer": "B", "explanation": "", "type": "single", "module": "08 职业素养", "moduleId": 8}, {"q": 7, "text": "开始着手进行对客户的梳理，下列属于客户行业现状梳理维度的是", "options": [{"label": "A", "text": "竞争格局"}, {"label": "B", "text": "市场结构"}, {"label": "C", "text": "商业模式"}, {"label": "D", "text": "用户规模"}], "answer": "C", "explanation": "", "type": "single", "module": "05 客户营销与提案", "moduleId": 5}, {"q": 8, "text": "下列关于数据指标漏斗模型中落地页类的转化漏斗，表述正确的是：", "options": [{"label": "A", "text": "展示——落地页访问——落地页内转化——线索转化"}, {"label": "B", "text": "展示——点击—落地页内转化——落地页访问————线索转化"}, {"label": "C", "text": "展示——点击——落地页访问——线索转化——落地页内转化"}, {"label": "D", "text": "展示——点击——落地页访问——落地页内转化——线索转化"}], "answer": "D", "explanation": "", "type": "single", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 9, "text": "以下关于头条第三方监测的点击监测，说法错误的是", "options": [{"label": "A", "text": "同步监测时是用户的客户端发送数据"}, {"label": "B", "text": "同步监测时，用户可以明显感知到落地页跳转"}, {"label": "C", "text": "如果监测链接是同步监测链接必须确保可以访问，因为涉及到用户被带到哪里"}, {"label": "D", "text": "点击监测只支持同步监测"}], "answer": "D", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 10, "text": "每组程序化落地页最多支持多少个落地页？", "options": [{"label": "A", "text": "10"}, {"label": "B", "text": "12"}, {"label": "C", "text": "15"}, {"label": "D", "text": "20"}], "answer": "A", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 11, "text": "下列不属于今日头条投放管理平台中定向方式的是：", "options": [{"label": "A", "text": "地域定向"}, {"label": "B", "text": "兴趣定向"}, {"label": "C", "text": "手机品牌定向"}, {"label": "D", "text": "婚姻状况定向"}], "answer": "D", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 12, "text": "通常情况下，广告能否获得展示是有ecpm决定的，影响ecpm的两个因素是", "options": [{"label": "A", "text": "出价、竞价环境"}, {"label": "B", "text": "广告质量度、人群定向"}, {"label": "C", "text": "广告投放位置广告质量度"}, {"label": "D", "text": "出价、广告质量度"}], "answer": "D", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 13, "text": "某广告主想在头条推广产品时，直接唤起电话进行购买，它需要创建哪种目的的推广", "options": [{"label": "A", "text": "应用下载"}, {"label": "B", "text": "落地页"}, {"label": "C", "text": "文章推广"}, {"label": "D", "text": "以上选择都可以"}], "answer": "B", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 14, "text": "下列广告位中，可以选择“头条文章”为推广目的的是：", "options": [{"label": "A", "text": "今日头条"}, {"label": "B", "text": "抖音短视频"}, {"label": "C", "text": "火山小视频"}, {"label": "D", "text": "西瓜视频"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 15, "text": "关于广告计划放开定向，下列说法正确的是：", "options": [{"label": "A", "text": "广告计划有转化后即可放开定向"}, {"label": "B", "text": "为了找到精准人群，定向越窄越好"}, {"label": "C", "text": "巨量引擎和其他媒体的定向原理是相同的"}, {"label": "D", "text": "待广告计划分时成本稳定之后，是适合打开定向的时机"}], "answer": "D", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 16, "text": "下列关于信息流广告不同计费方式中，广告展示优先级的说法正确的是：", "options": [{"label": "A", "text": "CPT广告=GD广告＞竞价广告"}, {"label": "B", "text": "CPT广告＞GD广告＞竞价广告"}, {"label": "C", "text": "GD广告＞CPT广告＞竞价广告"}, {"label": "D", "text": "CPT广告＞竞价广告＞GD广告"}], "answer": "B", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 17, "text": "使用计划诊断工具后的诊断结果为：投放效果较差。最可能的原因是", "options": [{"label": "A", "text": "出价过高"}, {"label": "B", "text": "预算不足"}, {"label": "C", "text": "定向过于精确"}, {"label": "D", "text": "内容吸引力过高"}], "answer": "B", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 18, "text": "下列关于视频制作相关工具，描述错误是：", "options": [{"label": "A", "text": "即视平台可帮助广告主利用模板快速生成创意视频"}, {"label": "B", "text": "易拍APP可提供多种特效供广告主自由创作视频"}, {"label": "C", "text": "即合平台拥有强大的系统自动生成创意视频功能"}, {"label": "D", "text": "电商、招商加盟、教育类等都可使用即视平台"}], "answer": "C", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 19, "text": "对于产品卖点提炼，下列说法错误的是", "options": [{"label": "A", "text": "需要提炼消费者最关心的卖点"}, {"label": "B", "text": "需要提炼自身产品具有的卖点"}, {"label": "C", "text": "需要提炼竞争对手没有或没提过的—差异化卖点"}, {"label": "D", "text": "产品的特点，其实就是产品卖点"}], "answer": "D", "explanation": "", "type": "single", "module": "05 客户营销与提案", "moduleId": 5}, {"q": 20, "text": "在和客户的日常沟通中，如果因为分歧导致你的合作伙伴对你产生消极负面情绪，你首先要做的是要放弃沟通的内容，维护沟通氛围。", "options": [{"label": "A", "text": "对"}, {"label": "B", "text": "错"}], "answer": "A", "explanation": "", "type": "tf", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 21, "text": "巨量引擎广告投放平台中的模版工具支持哪种视频的制作？", "options": [{"label": "A", "text": "情景剧类视频"}, {"label": "B", "text": "录屏类视频"}, {"label": "C", "text": "口播类视频"}, {"label": "D", "text": "图文快闪类视频"}], "answer": "D", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 22, "text": "某广告主的某条广告计划消耗100元、展示数10000、点击数500，那么它的CPM是", "options": [{"label": "A", "text": "2"}, {"label": "B", "text": "5"}, {"label": "C", "text": "10"}, {"label": "D", "text": "20"}], "answer": "C", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 23, "text": "某头条广告账户余额为零后，该账号会呈现什么状态？", "options": [{"label": "A", "text": "账户不会触发审核，但是账户余额为零，计划不会放出"}, {"label": "B", "text": "不会影响在投计划的投放，账户进入待审核状态，无法新建计划"}, {"label": "C", "text": "该账户计划仍会放出"}], "answer": "A", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 24, "text": "客户在使用程序化创意设置时，上传了2个视频和5个标题，这样能生成_____套创意。", "options": [{"label": "A", "text": "5"}, {"label": "B", "text": "7"}, {"label": "C", "text": "10"}, {"label": "D", "text": "12"}], "answer": "C", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 25, "text": "优化师小明是做淘宝运营的，那他最不可能接触到的推广方式是？", "options": [{"label": "A", "text": "智砖"}, {"label": "B", "text": "直通车"}, {"label": "C", "text": "广点通"}, {"label": "D", "text": "达摩盘"}], "answer": "C", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 26, "text": "短视频mcn是短视频内容创作方的聚合，提供内容制作、版权管理、宣发推广、粉丝运营、变现销售源对接等专业化服务，下列关于短视频mcn的描述错误的是", "options": [{"label": "A", "text": "对平台方而言，提高创作水准，实现更高效可控的流程管理"}, {"label": "B", "text": "对广告主而言，降低平台运营成本提高效率"}, {"label": "C", "text": "对创作者而言，进行生命周期光里，为价值变现打开通路"}, {"label": "D", "text": "对于内容受众而言，观看更少的广告，减少等待时间"}], "answer": "A", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 27, "text": "以下关于头条第三方检测的展示检测，说法错误的是", "options": [{"label": "A", "text": "展示检测通过用户的客户端发送展示数据"}, {"label": "B", "text": "展示检测只有一个检测位置，且只支持异步检测的方式"}, {"label": "C", "text": "展示检测可以支持回传IDFA等参数"}, {"label": "D", "text": "AD后台不支持添加展示检测"}], "answer": "D", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 28, "text": "尽管竖屏广告时间有限，但仍需尽可能密集地向受众介绍产品的各大优势，充分使受众接受到产品的广告信息，实现高转化", "options": [{"label": "A", "text": "对"}, {"label": "B", "text": "错"}], "answer": "B", "explanation": "", "type": "tf", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 29, "text": "下列行为是在工作沟通中不恰当的表现是？", "options": [{"label": "A", "text": "追求效率，客户表述不当时要立即打断，规避风险"}, {"label": "B", "text": "换位思考，从客户角度思考解决问题"}, {"label": "C", "text": "尊重理解，尊重对方传递的信息，理解并回复"}, {"label": "D", "text": "积极引导，帮助客户产生真诚倾诉的欲望"}], "answer": "A", "explanation": "", "type": "single", "module": "08 职业素养", "moduleId": 8}, {"q": 30, "text": "次留双出价中，累积多少个次留数，可以度过冷启动期进入模型生效阶段？", "options": [{"label": "A", "text": "1天内积累20个次留数"}, {"label": "B", "text": "3天内积累20个次留数"}, {"label": "C", "text": "5天内积累30个次留数"}, {"label": "D", "text": "7天内积累100个次留数"}], "answer": "B", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 31, "text": "创意标签最多可以写多少个?", "options": [{"label": "A", "text": "10"}, {"label": "B", "text": "20"}, {"label": "C", "text": "30"}, {"label": "D", "text": "50"}], "answer": "B", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 32, "text": "当客户提出异议“你能保证我获取的表单都能转化吗”时，下列说辞不合理的是：", "options": [{"label": "A", "text": "我和您详细沟通一下这个问题，然后再谈后续合作好么？"}, {"label": "B", "text": "您是担心广告费用过高么？请问您的预算是多少呢？"}, {"label": "C", "text": "我们在人群定向、账户优化、数据分析各方面都很擅长，具体情况咱们可以根据您的需求详细聊下。"}, {"label": "D", "text": "我们拥有专业的优化团队为您引流，同时需要看您后期与受众的沟通情况。"}], "answer": "B", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 33, "text": "头条推广计划设置中，CPM出价不得低于多少？", "options": [{"label": "A", "text": "1元"}, {"label": "B", "text": "2元"}, {"label": "C", "text": "3元"}, {"label": "D", "text": "4元"}], "answer": "D", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 34, "text": "广告主在新建广告创意时，从今日头条投放管理平台中哪个工具里可以获取免费图片素材？", "options": [{"label": "A", "text": "图片供应工具"}, {"label": "B", "text": "图片交易工具"}, {"label": "C", "text": "免费正版图库"}, {"label": "D", "text": "图片制作工具"}], "answer": "C", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 35, "text": "某条头条广告计划的投放效果突然变差，原因可能是", "options": [{"label": "A", "text": "固定位广告填充率高"}, {"label": "B", "text": "落地页无法正常加载"}, {"label": "C", "text": "转化数据统计丢失"}, {"label": "D", "text": "以上皆是"}], "answer": "D", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 36, "text": "下列关于留存分析，表述正确的是：", "options": [{"label": "A", "text": "广告素材与App的关联性会影响用户的留存"}, {"label": "B", "text": "产品自身的属性不会影响留存率"}, {"label": "C", "text": "产品的运营情况不会影响其留存率的波动"}, {"label": "D", "text": "广告素材与App的关联性越大，留存越差"}], "answer": "A", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 37, "text": "点击率的计算公式是", "options": [{"label": "A", "text": "点击率=点击量/消费量"}, {"label": "B", "text": "点击率=点击量/展现量"}, {"label": "C", "text": "点击率=点击量/转化量"}, {"label": "D", "text": "点击率=点击量/浏览量"}], "answer": "B", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 38, "text": "客户使用程序化创意设置时，最少可以添加________个标题。", "options": [{"label": "A", "text": "5"}, {"label": "B", "text": "8"}, {"label": "C", "text": "9"}, {"label": "D", "text": "1"}], "answer": "D", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 39, "text": "关于转化率以下说法正确的是", "options": [{"label": "A", "text": "转化/点击"}, {"label": "B", "text": "点击/转化"}, {"label": "C", "text": "转化/展现"}, {"label": "D", "text": "展现/转化"}], "answer": "A", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 40, "text": "今日头条投放管理平台中，广告主账户头像和名称多久可以修改一次：", "options": [{"label": "A", "text": "5天"}, {"label": "B", "text": "1天"}, {"label": "C", "text": "7天"}, {"label": "D", "text": "随时可修改"}], "answer": "C", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 41, "text": "某小众旅游APP想再头条上推广其产品，在使用APP行为定向指定APP投放时，优先考虑定向以下哪个APP", "options": [{"label": "A", "text": "饿了么"}, {"label": "B", "text": "QQ音乐"}, {"label": "C", "text": "豆瓣"}, {"label": "D", "text": "去哪儿"}], "answer": "D", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 42, "text": "一个广告组最多可以创建多少个计划？", "options": [{"label": "A", "text": "100"}, {"label": "B", "text": "300"}, {"label": "C", "text": "500"}, {"label": "D", "text": "1000"}], "answer": "C", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 43, "text": "某客户某推广组最近七天cpc成本20，客户要求12，ocpc目标转化出价设置多少比较合适?", "options": [{"label": "A", "text": "10—12"}, {"label": "B", "text": "12—15"}, {"label": "C", "text": "18-24"}, {"label": "D", "text": "26-30"}], "answer": "C", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 44, "text": "某东莞市广告主在头条广告投放后台设置地域定向，可以选择镇区进行投放", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 45, "text": "程序化落地页，必须要有几个落地页才能支持投放？", "options": [{"label": "A", "text": "2"}, {"label": "B", "text": "3"}, {"label": "C", "text": "4"}, {"label": "D", "text": "5"}], "answer": "A", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 46, "text": "关于客户推广主营资质，下列描述正确的是", "options": [{"label": "A", "text": "律师事务所开户需提供营业执照"}, {"label": "B", "text": "事业单位开户需提供营业执照"}, {"label": "C", "text": "民办学校开户需提供民办学校许可证"}, {"label": "D", "text": "香港企业需提供营业执照"}], "answer": "C", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 47, "text": "巨量引擎广告投放平台中，关于用户首次激活的时间定向，下列说法错误的是：", "options": [{"label": "A", "text": "是指新用户安装今日头条APP后首次打开应用的时间"}, {"label": "B", "text": "主要针对今日头条的新老使用用户有区分投放需求的广告主"}, {"label": "C", "text": "对于长期在今日头条APP大量投放的广告主想要将广告投放给没看过广告的新用户，应该选择三个月或者更早"}, {"label": "D", "text": "目前只支持三个时间段"}], "answer": "C", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 48, "text": "以下选项不属于网络营销优势的是", "options": [{"label": "A", "text": "覆盖范围广"}, {"label": "B", "text": "不受时间限制"}, {"label": "C", "text": "受众数量庞大"}, {"label": "D", "text": "交互性弱"}], "answer": "D", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 49, "text": "下列哪种类型的视频可以借助今日头条投放管理平台中的模版工具进行制作：", "options": [{"label": "A", "text": "情景剧类视频"}, {"label": "B", "text": "录屏类视频"}, {"label": "C", "text": "口播类视频"}, {"label": "D", "text": "图文快闪类视频"}], "answer": "D", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 50, "text": "在头条投放安卓类应用下载广告时，填写的有什么要求", "options": [{"label": "A", "text": "必须使用ITunes的原始链接，不得使用短链，不得跳转"}, {"label": "B", "text": "使用应用下载安装包链接，或使用点击便邸跳转动作的短链"}], "answer": "B", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 51, "text": "飞鱼CRM中一个客服能绑定几个飞鱼账户?", "options": [{"label": "A", "text": "1"}, {"label": "B", "text": "3"}, {"label": "C", "text": "5"}, {"label": "D", "text": "E、10"}], "answer": "A", "explanation": "", "type": "single", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 52, "text": "头条DMP功能上传设备号时支持哪些格式？", "options": [{"label": "A", "text": "仅支持IME和IDFA原值"}, {"label": "B", "text": "支持IMEI和IDFA原值和加密形式，手机号加密形式"}, {"label": "C", "text": "仅支持IMEI和IDFA加密形式"}, {"label": "D", "text": "仅支持手机号上传"}], "answer": "B", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 53, "text": "让第三方监测公司监测数据，头条提供哪种数据传输服务？", "options": [{"label": "A", "text": "PI"}, {"label": "B", "text": "SDK"}, {"label": "C", "text": "OAUTH"}, {"label": "D", "text": "短信接口"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 54, "text": "在日常时间管理中，对于紧急不重要的事情通常需要如何处理？", "options": [{"label": "A", "text": "稍后一定做"}, {"label": "B", "text": "赶紧做"}, {"label": "C", "text": "安排合适的人做"}, {"label": "D", "text": "少做不做"}], "answer": "C", "explanation": "", "type": "single", "module": "08 职业素养", "moduleId": 8}, {"q": 55, "text": "开始着手进行对客户的梳理，下列属于客户行业现状梳理维度的是：", "options": [{"label": "A", "text": "竞争格局"}, {"label": "B", "text": "市场结构"}, {"label": "C", "text": "商业模式"}, {"label": "D", "text": "用户规模"}], "answer": "C", "explanation": "", "type": "single", "module": "05 客户营销与提案", "moduleId": 5}, {"q": 56, "text": "客户张先生想要多渠道投放，于是咨询优化师李强，非字节系广告投放平台之外，还有哪些不错的渠道，以下张明讲解非字节系广告投放媒体平台有误的是哪一项？", "options": [{"label": "A", "text": "穿山甲：帮助全球APP获得成功，推动广告价值高效转化。"}, {"label": "B", "text": "微信朋友圈广告：可以模拟朋友圈原生消息，拥有海量曝光。"}, {"label": "C", "text": "阿里妈妈渠道：淘宝+天猫天然电商社区优势，阿里大生态媒体加+全球媒体合作,品牌和消费者实现全媒体互动。"}, {"label": "D", "text": "百度信息流广告：在百度各平台的资讯流中穿插展现的原生广告广告及时内容。"}], "answer": "A", "explanation": "", "type": "single", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 57, "text": "在对时间进行有效管理中，我们设置待办事项清单首先要做的事情是：", "options": [{"label": "A", "text": "标明计划完成的时间"}, {"label": "B", "text": "合理排序"}, {"label": "C", "text": "补充相关事情"}, {"label": "D", "text": "写下来明显重要的事情"}], "answer": "D", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 58, "text": "在头条AD平台上，广告组级别不可以查看的自定义列有", "options": [{"label": "A", "text": "动态词包数据"}, {"label": "B", "text": "应该下载广告数据"}, {"label": "C", "text": "转化数据"}, {"label": "D", "text": "展现数据"}], "answer": "A", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 59, "text": "对于有放量需求的广告主，为了找到精准人群，使用定向时越窄越好。", "options": [{"label": "A", "text": "对"}, {"label": "B", "text": "错"}], "answer": "B", "explanation": "", "type": "tf", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 60, "text": "在转化跟踪工具中，Xpath只需设置网站上的目标转化区域，即可统计转化数据.", "options": [{"label": "A", "text": "对"}, {"label": "B", "text": "错"}], "answer": "A", "explanation": "", "type": "tf", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 61, "text": "在头条建立广告计划时，设置广告受众时如果使用APP行为走向，该定向对哪些客户生效？", "options": [{"label": "A", "text": "安卓用户"}, {"label": "B", "text": "苹果用户"}, {"label": "C", "text": "二者那生效"}, {"label": "D", "text": "二者都不生效"}], "answer": "C", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 62, "text": "下列不属于短视频营销内容策划技巧的事", "options": [{"label": "A", "text": "展示产品特征"}, {"label": "B", "text": "灵活的拍摄手法"}, {"label": "C", "text": "唤起消费者需求"}, {"label": "D", "text": "培养产品好感"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 63, "text": "关于广告主推广的入口图，下列描述不正确的是", "options": [{"label": "A", "text": "入口图不得添加虚假的“关闭（叉号）图标”"}, {"label": "B", "text": "入口图不得使用虚假的“播放/暂停按钮”"}, {"label": "C", "text": "入口图不得使用虚假的“未读消息图标”"}, {"label": "D", "text": "入口图内容可以和落地页内容不一致"}], "answer": "D", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 64, "text": "使用程序化创意，如何正确填写图片标签？", "options": [{"label": "A", "text": "根据行业分类填写关键词"}, {"label": "B", "text": "根据产昆内容填写关键词"}, {"label": "C", "text": "根据图片内容填写关键词"}, {"label": "D", "text": "根据目标人群填写关键词"}], "answer": "C", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 65, "text": "客户推广苹果应用下载类产品，关于其推广的，下列描述正确的是：", "options": [{"label": "A", "text": "必须使用直接指向苹果公司APPStore的原始链接"}, {"label": "B", "text": "可以使用越狱链接"}, {"label": "C", "text": "可以使用短链"}, {"label": "D", "text": "可以使用跳转链接"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 66, "text": "如对头条产品知识有疑问，可以通过什么方式自查？", "options": [{"label": "A", "text": "一站式·知识库"}, {"label": "B", "text": "巨量大学"}, {"label": "C", "text": "以上说法都正确"}], "answer": "C", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 67, "text": "在信息流广告投放过程中，关于a/btest说法错误的是", "options": [{"label": "A", "text": "两组对照实验运行一段时间后分别统计两组用户的表现，不用数据结果进行对比，就可以科学的帮助决策"}, {"label": "B", "text": "中文名·对比测试"}, {"label": "C", "text": "同一个目标制定两个以上方案，一组实验组，一组对照组，两组用户特点类似，并且同时运行"}, {"label": "D", "text": "是互联网工作中利用数据帮助决策的基础防范，也是广告投放优化的基础优化策略"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 68, "text": "某广告主的某条广告计划消耗200元、展示数20000、点击数500，那么它的CPM是：", "options": [{"label": "A", "text": "10"}, {"label": "B", "text": "20"}, {"label": "C", "text": "25"}, {"label": "D", "text": "100"}], "answer": "A", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 69, "text": "在巨量引擎广告投放平台中，基础定向中的用户性别及年龄是根据真实的用户信息判断出来的.", "options": [{"label": "A", "text": "对"}, {"label": "B", "text": "错"}], "answer": "B", "explanation": "", "type": "tf", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 70, "text": "以下关于头条竞价广告计费的说法，正确的是", "options": [{"label": "A", "text": "竞价计费采用第二计费机制"}, {"label": "B", "text": "广告点击扣费=广告出价"}, {"label": "C", "text": "广告扣费按照平台低价计费"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 71, "text": "关于今日头条投放管理平台中的橙子建站，下列说法错误的是：", "options": [{"label": "A", "text": "客户用自己域名开发的落地页，并且自行设计的落地页"}, {"label": "B", "text": "加载速度快、适配今日头条生态、数据披露详尽、转化效果显著"}, {"label": "C", "text": "能匹配广告主多落地页诉求，通过预加载优化广告质量度，提升广告竞争力。"}, {"label": "D", "text": "是专业服务于广告主的免费落地页制作工具"}], "answer": "A", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 72, "text": "通常情况下，优质的广告创意需要具备的属性有：", "options": [{"label": "A", "text": "以事实为基础，卖点、价格可无限夸大"}, {"label": "B", "text": "重点突出，针对不同的受众需求设置相同的广告创意"}, {"label": "C", "text": "接地气说人话，从用户角度出发，坦诚、友好"}, {"label": "D", "text": "明确衡量标准，以品牌效益为主，不用控制竞价对转化成本"}], "answer": "C", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 73, "text": "广告主在新建广告创意时，从巨量引擎广告投放平台中哪个工具里可以获取免费图片素材", "options": [{"label": "A", "text": "图片供应工具"}, {"label": "B", "text": "图片交易工具"}, {"label": "C", "text": "免费正版图库"}, {"label": "D", "text": "图片制作工具"}], "answer": "C", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 74, "text": "对某些类型的文章分类感兴趣的受众是通过______定向表现出来的。", "options": [{"label": "A", "text": "兴趣分类"}, {"label": "B", "text": "兴趣关键词"}, {"label": "C", "text": "人群包"}, {"label": "D", "text": "智能定向"}], "answer": "A", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 75, "text": "抖音短视频频道视频信息流广告中，评论管理功能不支持的是：", "options": [{"label": "A", "text": "转发某条评论"}, {"label": "B", "text": "删除某条评论"}, {"label": "C", "text": "查看某条评论的回复"}, {"label": "D", "text": "回复某条评论"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 76, "text": "当发生什么情形时，智能电话工具记录一次转化", "options": [{"label": "A", "text": "客户拨打电话"}, {"label": "B", "text": "广告主接通电话"}, {"label": "C", "text": "客户提交电话号码"}, {"label": "D", "text": "客户未接听直接挂断电话"}], "answer": "B", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 77, "text": "是否支持一条计划定位多个商圈？", "options": [{"label": "A", "text": "支持"}, {"label": "B", "text": "不支持"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 78, "text": "关于今日头条投放管理平台中的广告组，下列说法错误的是：", "options": [{"label": "A", "text": "广告组日预算单次修改幅度不能低于100元"}, {"label": "B", "text": "DPA投放对应的广告组的投放目的是产品目录"}, {"label": "C", "text": "新建广告组必须设置预算上限"}, {"label": "D", "text": "新建广告组必须设置广告组名称"}], "answer": "C", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 79, "text": "热力图的作用", "options": [{"label": "A", "text": "了解用户活动路径"}, {"label": "B", "text": "监测落地页质量"}, {"label": "C", "text": "掌握潜在转化元素"}, {"label": "D", "text": "以上都是"}], "answer": "D", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 80, "text": "在头条建立广告计划时，设置广告受众时如果使用APP行为定向，该定向对哪些客户生效", "options": [{"label": "A", "text": "安卓用户"}, {"label": "B", "text": "苹果用户"}, {"label": "C", "text": "二者都生效"}, {"label": "D", "text": "二者都不生效"}], "answer": "A", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 81, "text": "关于人群包的使用，下列说法错误的是：", "options": [{"label": "A", "text": "一旦定向使用了DMP创建的自定义人群包，建议不使用其他定向条件，否则会让受众进一步变窄"}, {"label": "B", "text": "点击人群包可以通过ad后台广告主自己产出"}, {"label": "C", "text": "为了保证拉新效果，可以定期排除点击多次的人群"}, {"label": "D", "text": "头条后台只能提供单计划30天的点击人群"}], "answer": "D", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 82, "text": "下面那些广告素材可以通过头条审核？", "options": [{"label": "A", "text": "广告中使用中华人民共和国的国旗、国欧、国徽"}, {"label": "B", "text": "使用国家机关的名义或形象做宣传"}, {"label": "C", "text": "广告中使用警察形象进行广告宣传"}, {"label": "D", "text": "广告主推广的品牌本身的商标含有绝对化用词如「唯一摄影」申请了商标，可以使用「唯一摄影]商标宣传"}], "answer": "D", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 83, "text": "在转化跟踪工具中，只需设置网站上的目标转化区域，即可统计转化数据的是", "options": [{"label": "A", "text": "落地页api及应用下载激活"}, {"label": "B", "text": "js"}, {"label": "C", "text": "sdk"}, {"label": "D", "text": "xpath"}], "answer": "D", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 84, "text": "下列关于广告文案的解析，说法错误的是：", "options": [{"label": "A", "text": "记者剖析：酸奶店市场还有很大空间，是当前创业好机会”“记者剖析”和今日头条新闻内容相契合，内容原生化，契合用户阅读习惯，点击效果明显"}, {"label": "B", "text": "孩子总不睡觉，下载这个app读故事，孩子马上入睡”文案内容生活化，表述口语化，简单明了，符合平台受众阅读习惯"}, {"label": "C", "text": "“据说只有很少的玩家能玩到40关，来挑战一下？”少数人能玩到40关，激发用户的攀比心理。"}, {"label": "D", "text": "{地点}人有福啦！这里的衣服今日5折优惠，赶紧抢！这里的动态词包使用是错误的，应该改为日期动态词包"}], "answer": "D", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 85, "text": "投资回报率的英文简称是", "options": [{"label": "A", "text": "RPU"}, {"label": "B", "text": "ROI"}, {"label": "C", "text": "GMV"}, {"label": "D", "text": "SKU"}], "answer": "B", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 86, "text": "穿山甲激励视频广告资源支持cpa的计赛方式", "options": [{"label": "A", "text": "对"}, {"label": "B", "text": "错"}], "answer": "B", "explanation": "", "type": "tf", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 87, "text": "头条中的某条广告计划的展现为100000次，点击为2000次，带来60个转化，共计产生3000元消耗，请问该广告计划的CPM为多少", "options": [{"label": "A", "text": "1.5"}, {"label": "B", "text": "15"}, {"label": "C", "text": "30"}, {"label": "D", "text": "3"}], "answer": "C", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 88, "text": "智能优化法则要求信息流营销师巧妙设置标签和标题，增强点击和曝光量，下列不属于该法则要求的是", "options": [{"label": "A", "text": "尽可能多使用！？等标点符号，增加情感强度"}, {"label": "B", "text": "中视摘要概括和引导性"}, {"label": "C", "text": "仔细研究短视频的热点词，寻找爆红线索"}, {"label": "D", "text": "标题形式不能过于单一，巧用关键词"}], "answer": "A", "explanation": "", "type": "single", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 89, "text": "关于落地页中产品卖点的提炼，下列说法错误的是：", "options": [{"label": "A", "text": "消费者最关心的"}, {"label": "B", "text": "自身产品具有的"}, {"label": "C", "text": "竞争对手没有或没提过的——差异化卖点"}, {"label": "D", "text": "为了突出产品优质，产品卖点突出越多越好"}], "answer": "D", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 90, "text": "关于广告计划放开定向，下列说法正确的是：", "options": [{"label": "A", "text": "广告计划有转化后即可放开定向"}, {"label": "B", "text": "为了找到精准人群，定向越窄越好"}, {"label": "C", "text": "今日头条和其他媒体的定向原理是相同的"}, {"label": "D", "text": "待广告计划分时成本稳定之后，是适合打开定向的时机"}], "answer": "D", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 91, "text": "分析客户自身情况时，下列不属于客户产品及产品用户分析维度的是：", "options": [{"label": "A", "text": "竞品产品情况"}, {"label": "B", "text": "客户产品功能"}, {"label": "C", "text": "产品属性与特点"}, {"label": "D", "text": "产品定位"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 92, "text": "以下头条广告样式中，不支持填写创意副标题的是", "options": [{"label": "A", "text": "无附加创意的落地页广告"}, {"label": "B", "text": "安卓应用下载"}, {"label": "C", "text": "IOS应用下载"}, {"label": "D", "text": "附加创意为表单提交的落地页广告"}], "answer": "A", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 93, "text": "卡券平台是服务于个人用户的基础营销工具，满足品牌推广、促销活动、内容营销等多种营销诉求。", "options": [{"label": "A", "text": "对"}, {"label": "B", "text": "错"}], "answer": "B", "explanation": "", "type": "tf", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 94, "text": "头条某广告主账户预算花的快，并且推广无效果，以下优化方法中错误的是", "options": [{"label": "A", "text": "提高有效点击量，降低无效展示量"}, {"label": "B", "text": "优化账户设置，精准受众人群"}, {"label": "C", "text": "建议客户降低预算，等效果优化好在提升预算"}, {"label": "D", "text": "优化网站元素，突出转化目标"}], "answer": "C", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 95, "text": "下面产品属性鉴别哪个是对的", "options": [{"label": "A", "text": "食品：看“SC码/QS码”、生产许可标识"}, {"label": "B", "text": "化妆品：看备案文号“健”字"}, {"label": "C", "text": "消毒用品：看生产备案凭证标号“械”字"}, {"label": "D", "text": "医疗器械：看卫生许可证号“消”字"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 96, "text": "飞鱼CRM中线索转发需要如下哪个角色执行？", "options": [{"label": "A", "text": "普通员工"}, {"label": "B", "text": "管理员"}, {"label": "C", "text": "高级管理员"}, {"label": "D", "text": "超级管理员"}], "answer": "D", "explanation": "", "type": "single", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 97, "text": "影响广告主转化的因素包括(1)展现量(2)成交量(3)点击量(4)咨询量那么转化漏斗从大到小的顺序", "options": [{"label": "A", "text": "1234"}, {"label": "B", "text": "1432"}, {"label": "C", "text": "1324"}, {"label": "D", "text": "1342"}], "answer": "D", "explanation": "", "type": "single", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 98, "text": "应用下载类的下载完成和安装完成只支持iOS转化跟踪，激活、注册/付费iOS和安卓都支持。", "options": [{"label": "A", "text": "对"}, {"label": "B", "text": "错"}], "answer": "B", "explanation": "", "type": "tf", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 99, "text": "以下哪项不属于头条广告计划状态？", "options": [{"label": "A", "text": "审核不通过"}, {"label": "B", "text": "投放中"}, {"label": "C", "text": "超成本"}, {"label": "D", "text": "已暂停"}], "answer": "C", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 100, "text": "对于家居行业广告主，他想获取用户线索并进行电话拨打，在搭建账户时会选择哪个推广目的？", "options": [{"label": "A", "text": "应用推广"}, {"label": "B", "text": "产品推广"}, {"label": "C", "text": "文章推广"}, {"label": "D", "text": "销售线索推广"}], "answer": "D", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 101, "text": "根据今日头条信息流广告售卖方式的展现优先级，优先展示的广告类型是：", "options": [{"label": "A", "text": "GD广告"}, {"label": "B", "text": "竞价广告"}, {"label": "C", "text": "PT广告"}, {"label": "D", "text": "以上都不对"}], "answer": "C", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 102, "text": "下列不属于视频信息流广告优势的是：", "options": [{"label": "A", "text": "内容可视化"}, {"label": "B", "text": "潜移默化提升受众接受度"}, {"label": "C", "text": "精准化分发"}, {"label": "D", "text": "可信度高"}], "answer": "D", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 103, "text": "客户吐光的导航页面可以放置一些精简的文案，把控好重点，其他的次要信息（如合作品牌）可以视情况作调整，置后或放入其他导航页", "options": [{"label": "A", "text": "对"}, {"label": "B", "text": "错"}], "answer": "A", "explanation": "", "type": "tf", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 104, "text": "在广告审核过程中，若广告素材中含有“送你一副画，祝你生意兴隆”文案，属于封建迷信吗", "options": [{"label": "A", "text": "不做其他延伸，不算封建迷信"}, {"label": "B", "text": "算"}], "answer": "A", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 105, "text": "关于人群包的使用，下列说法错误的是：", "options": [{"label": "A", "text": "一旦定向使用了DMP创建的自定义人群包，建议不使用其他定向条件，否则会让受众进一步变窄"}, {"label": "B", "text": "点击人群包可以通过ad后台广告主自己产出"}, {"label": "C", "text": "为了保证拉新效果，可以定期排除点击多次的人群"}, {"label": "D", "text": "头条后台只能提供单计划30天的点击人群"}], "answer": "D", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 106, "text": "在广告视频制作中，连接广告主和创作者，能够快速批量生产高质量视频的制作平台是：", "options": [{"label": "A", "text": "即视平台"}, {"label": "B", "text": "易拍平台"}, {"label": "C", "text": "即合平台"}, {"label": "D", "text": "头条广告视频平台"}], "answer": "C", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 107, "text": "下列关于创章层级设置说法正确的事", "options": [{"label": "A", "text": "账户头像和品牌名称不是必填项，所以没必要设置"}, {"label": "B", "text": "创意分类和创意标签是系统预估广告ctr的重要指标，故创意分类、创意标签越宽泛效果越好"}, {"label": "C", "text": "程序化创意只支持视频素材"}, {"label": "D", "text": "动态磁暴是根据此包和用户兴趣地点等特征进行动态装换，实现动态创意表达，能有效提升广告点击率"}], "answer": "D", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 108, "text": "在dmp用户覆盖中，下列不是根据大盘情况的是", "options": [{"label": "A", "text": "应用定向"}, {"label": "B", "text": "Lbs"}, {"label": "C", "text": "排除包"}, {"label": "D", "text": "线索数据"}, {"label": "E", "text": "头条号粉丝"}], "answer": "C", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 109, "text": "下列关于巨量引擎广告投放平台中的定向体系，说法错误的是", "options": [{"label": "A", "text": "文章分类定向只针对详情页广告"}, {"label": "B", "text": "智能数字越高，表示投放人群覆盖面数越窄，兴趣度越高"}, {"label": "C", "text": "智能定向仅对优化目标为惦记和晨示的计划生效"}, {"label": "D", "text": "智能定向系数越小代表用户对该广告兴趣越强"}], "answer": "D", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 110, "text": "下列广告文案中，允许进行广告投放的是", "options": [{"label": "A", "text": "本产品为十九大指定用品"}, {"label": "B", "text": "本游戏特色设定：升官晋级，全靠送礼"}, {"label": "C", "text": "特大新闻：迎新年大甩卖"}, {"label": "D", "text": "质美价优，您的明智之选"}], "answer": "D", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 111, "text": "在下列工作场景中，应使用开放式提问场景的是", "options": [{"label": "A", "text": "搞清楚客户是否接受我们的建议"}, {"label": "B", "text": "核实客户的异议"}, {"label": "C", "text": "了解客户推广新产品相关信息"}, {"label": "D", "text": "确认客户的核心需求"}], "answer": "C", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 112, "text": "关于广告落地页A/BTEST，下列说法错误的是：", "options": [{"label": "A", "text": "有效的手段将更多流量从落地页引至你的网站、从现有访客挖掘更多销售线索。"}, {"label": "B", "text": "在落地页做一些小调整一般不会显著影响销售线索数量。"}, {"label": "C", "text": "通过广告投放测试，得到并比较这两个版本之间你所关心的数据(转化率，跳出率等)，最后选择效果最好的版本"}, {"label": "D", "text": "确定唯一自变量，观察在各个测试组中因变量效果差异，从而科学的得出影响转化的因素。"}], "answer": "B", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 113, "text": "关于头条创意轮播，下面哪些说法是正确的", "options": [{"label": "A", "text": "轮播模式下每个创意获得的点击量是一致的"}, {"label": "B", "text": "轮播模式下点击率低的创意没有展示机会"}, {"label": "C", "text": "删除点击率低的创意对计划的投放和预算分配有好处"}, {"label": "D", "text": "信息流的应用下载广告不能使用创意轮播"}], "answer": "C", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 114, "text": "下列关于视频制作相关工具，描述错误是", "options": [{"label": "A", "text": "即视平台可帮助广告主利用模板快速生成创意视频"}, {"label": "B", "text": "易拍APP可提供多种特效供广告主自由创作视频"}, {"label": "C", "text": "即合平台拥有强大的系统自动生成创意视频功能"}, {"label": "D", "text": "电商、招商加盟、教育类等都可使用即视平台"}], "answer": "C", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 115, "text": "中小客户/鲁班客户适合下列哪种投放方式?", "options": [{"label": "A", "text": "优先跑量"}, {"label": "B", "text": "均衡投放"}, {"label": "C", "text": "优先低成本"}, {"label": "D", "text": "极速放量"}], "answer": "C", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 116, "text": "关于移民类客户广告文案，下列允许进行广告投放的是：", "options": [{"label": "A", "text": "全程一站式服务，为您移民保驾护航"}, {"label": "B", "text": "远离中国地沟油，移民国外享受健康美食"}, {"label": "C", "text": "国内医疗水平太差，国外医疗有保障"}, {"label": "D", "text": "国内空气污染重，雾霾大，来国外呼吸新鲜空气"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 117, "text": "“按视频有效播放扣费，视频播完或播放大于10s则为有效播放”，以上描述对应的是下列哪种计费方式：", "options": [{"label": "A", "text": "CPC"}, {"label": "B", "text": "CPV"}, {"label": "C", "text": "PA"}, {"label": "D", "text": "CPM"}], "answer": "B", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 118, "text": "头条静态建站可以实现落地页预加载", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 119, "text": "头条AD平台广告预览账号绑定可以在哪里进行操作？", "options": [{"label": "A", "text": "D后台工具箱"}, {"label": "B", "text": "AD后台首页"}, {"label": "C", "text": "广告主AD后台-账号管理-账号信息页面"}, {"label": "D", "text": "以上入口都不对"}], "answer": "C", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 120, "text": "关于巨量引擎广告投放平台中的系统推荐定向，计费方式上，仅针对oCPC、oCPM付费方式计划生效。", "options": [{"label": "A", "text": "对"}, {"label": "B", "text": "错"}], "answer": "B", "explanation": "", "type": "tf", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 121, "text": "客户反馈在头条投放的效果不明显，没有电话拨打，也没有表单，应该如何进行优化", "options": [{"label": "A", "text": "在入口图处添加电话拨打"}, {"label": "B", "text": "优化落地页活动"}, {"label": "C", "text": "修改一键拨打电话号码"}, {"label": "D", "text": "修改入口图文案"}], "answer": "A", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 122, "text": "在进行客户目标拆解时，第一维度的客户主要考核内容为", "options": [{"label": "A", "text": "Cvr"}, {"label": "B", "text": "Ctr"}, {"label": "C", "text": "Roi"}, {"label": "D", "text": "量级"}], "answer": "D", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 123, "text": "在工作沟通中，下列属于高效倾听关键点的是：", "options": [{"label": "A", "text": "减少提问"}, {"label": "B", "text": "积极回应"}, {"label": "C", "text": "共同探讨"}, {"label": "D", "text": "客户至上"}], "answer": "B", "explanation": "", "type": "single", "module": "08 职业素养", "moduleId": 8}, {"q": 124, "text": "今日头条投放管理平台中，一个广告组最多可以创建_____条广告计划。", "options": [{"label": "A", "text": "100条"}, {"label": "B", "text": "999条"}, {"label": "C", "text": "500条"}, {"label": "D", "text": "1000条"}], "answer": "C", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 125, "text": "在下列哪一平台进行视频创作时，使用该平台的音乐可以避免版权风险？", "options": [{"label": "A", "text": "飞鱼CRM"}, {"label": "B", "text": "易拍APP"}, {"label": "C", "text": "图虫APP"}, {"label": "D", "text": "创意灵感工具"}], "answer": "B", "explanation": "", "type": "single", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 126, "text": "以下对于提升头条广告落地页的加载速度的方法，正确的是", "options": [{"label": "A", "text": "提高广告计划的出价"}, {"label": "B", "text": "暂停点击率较低的创意"}, {"label": "C", "text": "使用头条建站工具创建落地页"}, {"label": "D", "text": "创建多个广告计划"}], "answer": "C", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 127, "text": "以下关于用户兴趣定向说法正确的是？", "options": [{"label": "A", "text": "类目和关键词系是交集的关系"}, {"label": "B", "text": "支持选择类目词及搜索关键词的方式"}, {"label": "C", "text": "用户兴趣定向与性别、年龄是并集关系"}, {"label": "D", "text": "支持批量导入关键词"}], "answer": "B", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 128, "text": "关于头条竞价广告的竞争排序描述正确的是", "options": [{"label": "A", "text": "CPC及CPM分开进行排序"}, {"label": "B", "text": "CPC和CPM竞争排序，oCPC和CPA竞争排序"}, {"label": "C", "text": "PC/CPM／Ocpc/CPA同时竞争"}, {"label": "D", "text": "oCPC/CPA不参与排名竞争"}], "answer": "C", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 129, "text": "关于智能放量，以下说法错误的是", "options": [{"label": "A", "text": "选择智能放量过程中，可增删定向。"}, {"label": "B", "text": "选择智能放量后，可取消"}, {"label": "C", "text": "智能放量可以智能放开地域定向"}, {"label": "D", "text": "智能放量即系统自动调价，帮助计划渡过冷启动"}], "answer": "D", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 130, "text": "今日头条信息流竞价广告中，广告排序的核心依据是：", "options": [{"label": "A", "text": "出价"}, {"label": "B", "text": "预估点击率"}, {"label": "C", "text": "预估转化率"}, {"label": "D", "text": "eCPM"}], "answer": "D", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 131, "text": "关于头条竞价广告的竞争排序描述正确的是", "options": [{"label": "A", "text": "CPC及CPM分开进行排序"}, {"label": "B", "text": "CPC和CPM竞争排序，oCPC和CPA竞争排序"}, {"label": "C", "text": "PC/CPM/oCPC/CPA同时竞争"}, {"label": "D", "text": "oCPC/CPA不参与排名竞争"}], "answer": "C", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 132, "text": "通常情况下，优质的广告创意需要具备的属性有", "options": [{"label": "A", "text": "以事实为基础，卖点、价格可无限夸大"}, {"label": "B", "text": "重点突出，针对不同的受众需求设置相同的广告创意"}, {"label": "C", "text": "接地气说人话，从用户角度出发，坦诚、友好"}, {"label": "D", "text": "明确衡量标准，以品牌效益为主，不用控制竞价对转化成本"}], "answer": "C", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 133, "text": "下列不属于今日头条投放管理平台中用户环境定向的是：", "options": [{"label": "A", "text": "平台"}, {"label": "B", "text": "手机品牌"}, {"label": "C", "text": "网络"}, {"label": "D", "text": "用户首次激活时间"}], "answer": "D", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 134, "text": "某工具客户使用次留双出价，目前激活出价5元，次留出价20元。目前客户觉得效果很高，想继续提高一下消耗，建议调整出价正确的方式是", "options": [{"label": "A", "text": "每隔2小时调整一次，激活提价幅度20%左右，次留保持不变"}, {"label": "B", "text": "每隔2小时调整一次，激活提价幅度10%-20%,次留保持不变"}, {"label": "C", "text": "每隔2小时调整一次，激活提价幅度10%-20%，次留提价幅度10%-20%"}, {"label": "D", "text": "激活提价幅度50%-100%，次留提价幅度50%-100%"}], "answer": "C", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 135, "text": "营销师在策划撰写广告投放方案时，下列做法不当的是：", "options": [{"label": "A", "text": "借助营销通案、商业市场相关营销报告等进行数据、资料收集。"}, {"label": "B", "text": "将特殊渠道获知的广告主竞品数据，直接披露在投放方案中"}, {"label": "C", "text": "从巨量引擎整体情况出发，对比其他媒体的数据，分析出整体发展趋势。"}, {"label": "D", "text": "对广告主产品从产品属性、产品功能等方面进行分析。"}], "answer": "B", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 136, "text": "关于广告创意堆度的6种不同推广目的，描述错误的是", "options": [{"label": "A", "text": "落地页的附加创意可缩短转化流程，对提升roi效果有一定作用"}, {"label": "B", "text": "应用下载广告在创意层级必须设置广告承接详情页"}, {"label": "C", "text": "文章推广的投放位置可选择今日头条、西瓜视频、抖音视频"}, {"label": "D", "text": "落地页推广目的在广告创意层级可添加附加创意"}], "answer": "C", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 137, "text": "关于教育培训类广告文案，下列允许进行投放的是", "options": [{"label": "A", "text": "专业会计培训，让您一步拿注会证"}, {"label": "B", "text": "孩子学好英语少走弯路"}, {"label": "C", "text": "有中考命题组的老师指导培训"}, {"label": "D", "text": "出售成人高考答案"}], "answer": "B", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 138, "text": "下列关于转化跟踪工具，说法错误的是：", "options": [{"label": "A", "text": "CPA不能使用转化跟踪"}, {"label": "B", "text": "转化跟踪工具是通过设置转化目标（比如有多少人完成了注册），跟踪转化状态，衡量推广转化效果"}, {"label": "C", "text": "转化跟踪是对账户效果分析评估的重要来源之一"}, {"label": "D", "text": "如果用户完成某个自定义为有价值的操作，此类用户操作就称为转化"}], "answer": "A", "explanation": "", "type": "single", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 139, "text": "在投放策略制定中，技术对接住要包括常规转化和深度转化，下列相关描述正确的是", "options": [{"label": "A", "text": "深度转化包含用户的浏览轨迹、付费等深度行为的转化"}, {"label": "B", "text": "sdk全路径贵银分析，主力挑选高转化意向用户，目前只支持激活的转化目标"}, {"label": "C", "text": "api是以安装、下载为目标检测，明确有效转化人群，帮助建立模型"}, {"label": "D", "text": "eeplink是用户点击广告后到达下载app的制定页面，以达到有效拉新"}], "answer": "A", "explanation": "", "type": "single", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 140, "text": "在进行项目竞标时，A团队在投放方案中承诺1周提供3支视频素材，B、C、D团队承诺1周提供1支视频素材，最终广告主选择了A团队。此案例体现了呈现优秀方案时，应具备：", "options": [{"label": "A", "text": "时效性"}, {"label": "B", "text": "差异化"}, {"label": "C", "text": "多元化"}, {"label": "D", "text": "可操作性"}], "answer": "B", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 141, "text": "下列关于即合平台开通流程：1.开通权限；2.发布需求；3.视频确认；4.脚本确认；5.承接需求，正确顺序的是：", "options": [{"label": "A", "text": "1-2-5-4-3"}, {"label": "B", "text": "1-2-3-4-5"}, {"label": "C", "text": "2-1-3-4-5"}, {"label": "D", "text": "2-1-5-3-4"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 142, "text": "在巨量引擎广告投放平台的基础定向中，可以通过定位手机品牌和手机型号来寻找用户。", "options": [{"label": "A", "text": "对"}, {"label": "B", "text": "错"}], "answer": "B", "explanation": "", "type": "tf", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 143, "text": "下列不属于西瓜视频竞价广告资源的是：", "options": [{"label": "A", "text": "频道信息流广告"}, {"label": "B", "text": "视频后贴片广告"}, {"label": "C", "text": "小视频信息流广告"}, {"label": "D", "text": "文章详情页广告"}], "answer": "D", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 144, "text": "下列关于建议出价错误的是：", "options": [{"label": "A", "text": "为广告主提供的最低出价建议的工具"}, {"label": "B", "text": "建议出价会在广告主在新建计划和计划投放时出现"}, {"label": "C", "text": "广告账户在新建及投放过程中，应严格按照建议出价进行出价设置"}, {"label": "D", "text": "当计划推广物的单价与行业平均单价差异过大时，建议出价可能不符合预期，这时不建议采用"}], "answer": "C", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 145, "text": "关于广告落地页的元素，下列说法错误的是：", "options": [{"label": "A", "text": "头图作为用户会首先看到的信息，要用简练的文字或显眼的图片突出重点，并抓住用户眼球。"}, {"label": "B", "text": "品牌logo的露出，可以增加品牌背书，增强用户信任感。"}, {"label": "C", "text": "头图优先展示优惠免费信息和内容，有相对的福利吸引转化更好"}, {"label": "D", "text": "为了收集详尽的用户信息，表单字段越多越好"}], "answer": "D", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 146, "text": "在进行项目竞标时，A团队在投放方案中承诺1周提供3支视频素材，B、C、D团队承诺1周提供1支视频素材，最终广告主选择了A团队。此案例体现了呈现优秀方案时，应具备：", "options": [{"label": "A", "text": "时效性"}, {"label": "B", "text": "差异化"}, {"label": "C", "text": "多元化"}, {"label": "D", "text": "可操作性"}], "answer": "B", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 147, "text": "出价方式为oCPM广告计划，日预算最低可设置的金额为：", "options": [{"label": "A", "text": "100元"}, {"label": "B", "text": "300元"}, {"label": "C", "text": "500元"}, {"label": "D", "text": "1000元"}], "answer": "B", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 148, "text": "下列关于系统自动创意，描述错误的是：", "options": [{"label": "A", "text": "同一自动创意视频的图片来自账户下同一落地页"}, {"label": "B", "text": "系统套用两种模板，自动生成两支以上视频供选择"}, {"label": "C", "text": "视频生成后可更换／增加图片，调整图片位置"}, {"label": "D", "text": "系统只需1-2张图片，即可生成自动创意视频"}], "answer": "D", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 149, "text": "关于抖音短视频中的视频广告素材，下列说法错误的是：", "options": [{"label": "A", "text": "视频广告可以更高效地建立与用户的沟通桥梁，传达产品卖点"}, {"label": "B", "text": "竖版视频的最低尺寸要求为720*1280"}, {"label": "C", "text": "视频时长应该小于等于100s"}, {"label": "D", "text": "AD后台支持用多张图片拼接成视频素材"}], "answer": "C", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 150, "text": "程序化创意什么情况下可以生成组图图片？", "options": [{"label": "A", "text": "上传23张大图"}, {"label": "B", "text": "上传=3张小图"}, {"label": "C", "text": "上传＜3张小图"}, {"label": "D", "text": "上传＜3张大图"}], "answer": "B", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 151, "text": "下列不属于橙子建站转化效果更好的原因的是：", "options": [{"label": "A", "text": "落地页预加载，一触即达"}, {"label": "B", "text": "适配广告平台，有效提高转化效果"}, {"label": "C", "text": "页面热力图分析，精准优化"}, {"label": "D", "text": "素材和落地页一致性更强"}], "answer": "D", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 152, "text": "头条提供的建议出价是否涉及转化出价？", "options": [{"label": "A", "text": "是"}, {"label": "B", "text": "否"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 153, "text": "广告落地页制作建议中的“转化引导要清晰”指的是：", "options": [{"label": "A", "text": "将转化按钮放在最核心的位置"}, {"label": "B", "text": "多多放置转化按钮"}, {"label": "C", "text": "合理使用转化按钮，并尽缩短转化路径。电话、关注、优惠券在页面有转化按钮的引导"}, {"label": "D", "text": "为了让转化按钮瞩目，尽量越鲜艳越好"}], "answer": "C", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 154, "text": "下列关于优秀投放方案的标准，说法错误的是：", "options": [{"label": "A", "text": "优质的投放方案只需要美化PPT形式，体现出高端大气的格调即可。"}, {"label": "B", "text": "应清晰梳理出客户现有/历史投放中已存在、待解决问题以及未来潜在需求。"}, {"label": "C", "text": "对于问题及需求，除了解决能力，还要体现出与同行业人员的竞争优势。"}, {"label": "D", "text": "通过抓住客户的需求痛点，引导客户关注优化团队专业能力及优势。"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 155, "text": "关于GMV，下列表述错误的是：", "options": [{"label": "A", "text": "GMV=流量数量*转化率*客单价"}, {"label": "B", "text": "GMV只包括付款订单"}, {"label": "C", "text": "GMV代指网站的成交金额"}, {"label": "D", "text": "GMV包括付款订单和未付款的订单"}], "answer": "B", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 156, "text": "关于营业执照复印件提交时，下列描述正确的是：", "options": [{"label": "A", "text": "只需在复印件上加盖公章即可"}, {"label": "B", "text": "只需在复印件上手写“与原件一致”五个字即可"}, {"label": "C", "text": "复印件需手写“与原件一致”五个字并在该字样上加盖公章"}, {"label": "D", "text": "公章没必要加盖在“与原件一致”五个字上"}], "answer": "C", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 157, "text": "今日头条投放管理平台中，创意展现方式有：", "options": [{"label": "A", "text": "优选模式、轮播模式"}, {"label": "B", "text": "优选模式、自定义模式"}, {"label": "C", "text": "程序化模式、轮播模式"}, {"label": "D", "text": "优选模式、程序化模式"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 158, "text": "在进行广告投放对投放产品属性进行思考时，主要研究", "options": [{"label": "A", "text": "研究产品单价"}, {"label": "B", "text": "分析产品受众"}, {"label": "C", "text": "分析产品卖点"}, {"label": "D", "text": "分析广告投放平台受众"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 159, "text": "巨量引擎的地域定向是基于用户的哪些因素得出", "options": [{"label": "A", "text": "GPS"}, {"label": "B", "text": "IP"}, {"label": "C", "text": "历史城市"}, {"label": "D", "text": "户籍所在地"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 160, "text": "科学合理搭建账户便于对账户进行优化管理，同时可以", "options": [{"label": "A", "text": "清晰地对比测试效果"}, {"label": "B", "text": "便于数据统计与分析"}, {"label": "C", "text": "及时发现问题并处理"}, {"label": "D", "text": "思路创建清晰节省时间"}, {"label": "E", "text": "细化投放策略、提升投放效果"}], "answer": "ABCDE", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 161, "text": "下列关于工作沟通中FAB法则，说法正确的是", "options": [{"label": "A", "text": "F是feature，指产品所包含的现实和具有的属性"}, {"label": "B", "text": "A是aim，是产品属性对应的目标"}, {"label": "C", "text": "B是Benefit，是产品所带来的利益"}, {"label": "D", "text": "FAB法则有助于表达时切入核心要点"}], "answer": "ACD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 162, "text": "OCPM的广告展示排序主要受什么因素影响？", "options": [{"label": "A", "text": "出价"}, {"label": "B", "text": "预估点击率"}, {"label": "C", "text": "点击率"}, {"label": "D", "text": "预估转化率"}], "answer": "ABD", "explanation": "", "type": "multi", "module": "07 数据分析", "moduleId": 7}, {"q": 163, "text": "下面哪些内容对落地页的展示效果有着重要影响？", "options": [{"label": "A", "text": "遵循页面内容和创意内容一致性原则"}, {"label": "B", "text": "基本元素和结构布局"}, {"label": "C", "text": "产品卖点和页面逻辑"}, {"label": "D", "text": "满足用户的需求"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 164, "text": "广告法律责任分为几种？", "options": [{"label": "A", "text": "民事责任"}, {"label": "B", "text": "行政责任"}, {"label": "C", "text": "刑事责任"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "06 合规与审核", "moduleId": 6}, {"q": 165, "text": "关于飞鱼CRM的功能，下列描述不正确的是：", "options": [{"label": "A", "text": "不能自动分配线索"}, {"label": "B", "text": "系统数据看板提供线索转换情况"}, {"label": "C", "text": "广告主仅需支付低费率通话费用"}, {"label": "D", "text": "可以自动生成通话录音"}], "answer": "AC", "explanation": "", "type": "multi", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 166, "text": "下列属于创意灵感工具支持的创意形式的是：", "options": [{"label": "A", "text": "小图"}, {"label": "B", "text": "大图"}, {"label": "C", "text": "动图"}, {"label": "D", "text": "视频"}, {"label": "E", "text": "组图"}], "answer": "ABDE", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 167, "text": "营销师在进行广告竞标时，投放方案没有受到客户青睐，可能原因有：", "options": [{"label": "A", "text": "在产品和用户分析基础上，综合呈现出定向策略、创意策略、出价策略、优化策略。"}, {"label": "B", "text": "未梳理出客户现有/历史投放中已存在待解决问题以及未来潜在需求。"}, {"label": "C", "text": "未能从团队运营情况、增长情况、团队优势方面体现出自身优势。"}, {"label": "D", "text": "完成问题和需求分析后，给出了简略的落地方案。"}], "answer": "BCD", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 168, "text": "在做数据分析时，选择指标时说法正确的是？", "options": [{"label": "A", "text": "对数据指标进行随机性选取以减少误差"}, {"label": "B", "text": "明确统一数据指标的定义和使用场景"}, {"label": "C", "text": "确定核心指标，剔除无关指标"}, {"label": "D", "text": "数据指标结合细分维度做分析"}], "answer": "BCD", "explanation": "", "type": "multi", "module": "07 数据分析", "moduleId": 7}, {"q": 169, "text": "李老板在头条投放了应用下载类广告，某一天激活成本突然变高，造成这一现象的原因可能是", "options": [{"label": "A", "text": "账户余额不足"}, {"label": "B", "text": "应用下载包变大"}, {"label": "C", "text": "用户的网络环境问题"}, {"label": "D", "text": "激活数监测丢失"}], "answer": "BCD", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 170, "text": "下列属于巨量引擎广告投放平台中用户环境定向的是：", "options": [{"label": "A", "text": "平台"}, {"label": "B", "text": "手机品牌"}, {"label": "C", "text": "网络"}, {"label": "D", "text": "用户首次激活时间"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 171, "text": "用技术回馈社会，用信息帮助更多人，为承担更大的社会责任，字节跳动公司做了下列哪些努力？", "options": [{"label": "A", "text": "开展头条寻人项目"}, {"label": "B", "text": "开展AI反造谣"}, {"label": "C", "text": "成立网络安全委员会"}, {"label": "D", "text": "成立今日头条创作空间"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 172, "text": "下面属于广告效果优化相关工具的是：", "options": [{"label": "A", "text": "转化跟踪"}, {"label": "B", "text": "小6客服"}, {"label": "C", "text": "即合平台"}, {"label": "D", "text": "有效咨询"}], "answer": "ABD", "explanation": "", "type": "multi", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 173, "text": "营销师面向广告主输出投放总结（非竞标）方案时，可以不包含的内容是：", "options": [{"label": "A", "text": "团队实力"}, {"label": "B", "text": "团队服务体系"}, {"label": "C", "text": "投放策略"}, {"label": "D", "text": "历史合作广告主"}], "answer": "ABD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 174, "text": "在巨量引擎广告投放平台中，广告主可对下列哪项预算进行设置", "options": [{"label": "A", "text": "账户日预算"}, {"label": "B", "text": "创意日预算"}, {"label": "C", "text": "广告组日预算"}, {"label": "D", "text": "广告计划日预算"}], "answer": "ACD", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 175, "text": "关于巨量引擎广告投放平台中的系统推荐定向，下列说法正确的是", "options": [{"label": "A", "text": "系统推荐定向不需要关闭，当广告达到一定的投放转化量级，系统会自动放开至不限。"}, {"label": "B", "text": "系统推荐定向目前在“今日头条、西瓜视频、火山小视频、抖音、穿山甲”这些媒体位置均生效。"}, {"label": "C", "text": "目前投放管理平台看不到系统推荐定向所选择的具体兴趣分类"}, {"label": "D", "text": "目前系统推荐定向主要针对广告受众设置中的兴趣定向设置生效，系统会精选出最匹配的人群，帮助广告主更低的成本达到更好的投放效果"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 176, "text": "对于有持续拉新需求，且对用户精准度和质量度要求较高的广告主可以用DMP的功能有", "options": [{"label": "A", "text": "扩展包定位潜在高质量人群"}, {"label": "B", "text": "运算包已扩展用户减去低质量用户"}, {"label": "C", "text": "上传自有包排出已转化人群"}, {"label": "D", "text": "规则包排除多次点击未转化人群"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 177, "text": "在今日头条投放管理平台中，广告计划设置层级包含的投放方式有：", "options": [{"label": "A", "text": "优先跑量"}, {"label": "B", "text": "均衡投放"}, {"label": "C", "text": "加速投放"}, {"label": "D", "text": "优先低成本"}, {"label": "E", "text": "标准投放"}], "answer": "ABD", "explanation": "", "type": "multi", "module": "07 数据分析", "moduleId": 7}, {"q": 178, "text": "广告主如需进行落地页推广，下列可被选择的转化跟踪工具是：", "options": [{"label": "A", "text": "Xpath"}, {"label": "B", "text": "JS"}, {"label": "C", "text": "落地页API"}, {"label": "D", "text": "应用下载API"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 179, "text": "以下哪些是一名优秀信息流营销师所具备的品质？", "options": [{"label": "A", "text": "不经判断，对客户有求必应"}, {"label": "B", "text": "学会挖掘需求"}, {"label": "C", "text": "从客户角度思考"}, {"label": "D", "text": "积极回应客户的需求"}], "answer": "BCD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 180, "text": "使用计划质量度工具时，可从哪些维度来评估投放效果", "options": [{"label": "A", "text": "创意质量得分"}, {"label": "B", "text": "落地页响应得分"}, {"label": "C", "text": "落地页素材得分"}, {"label": "D", "text": "创意速度得分"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 181, "text": "以下关于投放管家说法正确的是?", "options": [{"label": "A", "text": "投放管家是一款智能化投放的产品"}, {"label": "B", "text": "主要作用为数据监控、计划诊断以及自动启停"}, {"label": "C", "text": "推广内容与转化跟踪内容不需要保持一致"}, {"label": "D", "text": "支持赔付"}], "answer": "AD", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 182, "text": "通常情况下，广告点击率低可以通过哪个方式改善", "options": [{"label": "A", "text": "优化文案"}, {"label": "B", "text": "优化定向"}, {"label": "C", "text": "优化素材"}, {"label": "D", "text": "优化落地页"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 183, "text": "下列转化目标在IOS端可被转化跟踪工具支持的是：", "options": [{"label": "A", "text": "下载"}, {"label": "B", "text": "激活"}, {"label": "C", "text": "注册"}, {"label": "D", "text": "付费"}], "answer": "BCD", "explanation": "", "type": "multi", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 184, "text": "下列关于优秀投放方案的标准，说法正确的是", "options": [{"label": "A", "text": "优质的投放方案只需要美化PPT形式，体现出高端大气的格调即可。"}, {"label": "B", "text": "应清晰梳理出客户现有/历史投放中已存在、待解决问题以及未来潜在需求。"}, {"label": "C", "text": "对于问题及需求，除了解决能力，还要体现出与同行业人员的竞争优势。"}, {"label": "D", "text": "通过抓住客户的需求痛点，引导客户关注优化团队专业能力及优势。"}], "answer": "BCD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 185, "text": "下列关于转化跟踪工具，说法正确的是：", "options": [{"label": "A", "text": "CPA不能使用转化跟踪"}, {"label": "B", "text": "转化跟踪工具是通过设置转化目标（比如有多少人完成了注册），跟踪转化状态，衡量推广转化效果"}, {"label": "C", "text": "转化跟踪是对账户效果分析评估的重要来源之一"}, {"label": "D", "text": "如果用户完成某个自定义为有价值的操作，此类用户操作就称为转化"}], "answer": "BCD", "explanation": "", "type": "multi", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 186, "text": "下面属于同步监测特点的是", "options": [{"label": "A", "text": "填写位置在落地页链接"}, {"label": "B", "text": "传输方式为头条客户端——第三方监测服务器——客户落地页"}, {"label": "C", "text": "实现方式：广告-监测代码中间页-（自动跳转）客户落地页"}, {"label": "D", "text": "能够正常访问和跳转"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 187, "text": "星图订单中看到的支持的视频数据有哪些？", "options": [{"label": "A", "text": "视频播放量"}, {"label": "B", "text": "视频点赞量"}, {"label": "C", "text": "视频评论量"}, {"label": "D", "text": "视频分享量"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 188, "text": "用技术回馈社会，用信息帮助更多人，为承担更大的社会责任，字节跳动在哪些方面坚守些自身的社会责任", "options": [{"label": "A", "text": "开展头条寻人项目"}, {"label": "B", "text": "开展AI反造谣"}, {"label": "C", "text": "成立网络安全委员会"}, {"label": "D", "text": "成立今日头条创作空间"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 189, "text": "移动网络环境下，广告落地页的策划和设计要注意", "options": [{"label": "A", "text": "广告第一屏要快速吸引访客停留"}, {"label": "B", "text": "考虑页面的加载速度：如果页面做了些特效，速度会慢些，要测试不同环境下的页面打开速度。"}, {"label": "C", "text": "除了引导访客在线咨询，还可以是加微信等多种引导方式"}, {"label": "D", "text": "如果落地页需要加载的内容很丰富，可以选择Wi-Fi的网络定向"}], "answer": "ABD", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 190, "text": "在头条广告投放管理平台上，广告计划状态显示已完成的条件是什么？", "options": [{"label": "A", "text": "已完成计划预算"}, {"label": "B", "text": "已完成投放时间投放"}, {"label": "C", "text": "已完成目标激活数"}, {"label": "D", "text": "已完成目标点击数"}], "answer": "AB", "explanation": "", "type": "multi", "module": "07 数据分析", "moduleId": 7}, {"q": 191, "text": "下列属于广告落地页说法正确的是？", "options": [{"label": "A", "text": "创意和落地页的相关性要前后呼应"}, {"label": "B", "text": "落地页的核心内容要简洁清晰，并且前置到较为明显的位置"}, {"label": "C", "text": "合理使用转化按钮，并尽量缩短转化路径。电话、关注、优惠券在页面有转化按钮的引导"}, {"label": "D", "text": "落地页面的打开速度不超过15秒就好"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 192, "text": "下列金融行业广告文案中，禁止进行投放的是：", "options": [{"label": "A", "text": "年收益达18%"}, {"label": "B", "text": "月薪3000元，理财一年买大奔"}, {"label": "C", "text": "公司同事小刘天天买买买，原来是使用了这款投资软件"}, {"label": "D", "text": "全额本息担保"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 193, "text": "DMP的核心功能有哪些", "options": [{"label": "A", "text": "上传自有人群包"}, {"label": "B", "text": "拓展相似人群和好友人群"}, {"label": "C", "text": "根据云图的标签，新建人群规则包"}, {"label": "D", "text": "对已有人群包运算、规则包运算"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 194, "text": "抖音号推广独占的定向功能有哪些？", "options": [{"label": "A", "text": "定向某个账号的粉丝"}, {"label": "B", "text": "关注数>x的用户"}, {"label": "C", "text": "过滤已转化用户"}, {"label": "D", "text": "过滤异常活跃用户"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 195, "text": "构思某游戏的创意时，下列做法需要的是", "options": [{"label": "A", "text": "参考该类型游戏投放创意"}, {"label": "B", "text": "从游戏的版号思考"}, {"label": "C", "text": "从游戏开发商思考"}, {"label": "D", "text": "从游戏内容思考"}], "answer": "ACD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 196, "text": "关于用户首次激活应用时间定向的设置，系统支持哪些时段设置？", "options": [{"label": "A", "text": "1周之内"}, {"label": "B", "text": "1个月"}, {"label": "C", "text": "1-3个月"}, {"label": "D", "text": "大于3个月"}], "answer": "BCD", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 197, "text": "某客户在测试视频广告的过程中发现产品展示类视频广告成本最好，除此之外，它还可以尝试的视频广告类型有", "options": [{"label": "A", "text": "情景剧"}, {"label": "B", "text": "图片切换"}, {"label": "C", "text": "录屏"}, {"label": "D", "text": "真人口播"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "07 数据分析", "moduleId": 7}, {"q": 198, "text": "关于广告主推广的落地页，下列描述正确的是", "options": [{"label": "A", "text": "落地页的主要内容应当与广告所推广的裔品或服务一致"}, {"label": "B", "text": "落地页必须在移动端适配，即必须适宜于在手机等移动设备中打开"}, {"label": "C", "text": "落地页中不能有自动播放的音频、视频或其他未经消费者同意严重消耗其网络流量的内容"}, {"label": "D", "text": "落地页不得在形式上抄袭、模仿知名网站（包括但不限于天猫、淘宝、京东等）以至于难以辨识其与等网站的差别"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 199, "text": "应用商店直投优化安卓端应用下载链路前提正确是", "options": [{"label": "A", "text": "客户必须使用点击归因"}, {"label": "B", "text": "app必须在对应厂商应用商店上架"}, {"label": "C", "text": "用户APP必须上架应用宝"}, {"label": "D", "text": "用户必须使用落地页下载方式投放"}], "answer": "AB", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 200, "text": "火山小视频品牌广告中单页信息流广告支持哪些交互功能", "options": [{"label": "A", "text": "支持分享"}, {"label": "B", "text": "支持关注广告主火山账号"}, {"label": "C", "text": "支持评论"}, {"label": "D", "text": "支持点赞"}, {"label": "E", "text": "支持绑定挑战赛"}], "answer": "ABCDE", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 201, "text": "落地页下转化跟踪支持设置哪些跟踪方式。", "options": [{"label": "A", "text": "非插件Xpath"}, {"label": "B", "text": "插件Xpath"}, {"label": "C", "text": "第三方JS代码工具"}, {"label": "D", "text": "付费"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 202, "text": "面对一个客户，想要快速了解该客户背景，应该着手从哪些维度进行有针对性的分析？", "options": [{"label": "A", "text": "行业分析"}, {"label": "B", "text": "产品分析"}, {"label": "C", "text": "用户分析"}, {"label": "D", "text": "财务与发展状况分析"}, {"label": "E", "text": "客户现有/历史投放分析"}], "answer": "ABCDE", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 203, "text": "以下属于用户行为定向的是？", "options": [{"label": "A", "text": "PP推广互动行为"}, {"label": "B", "text": "资讯互动行为"}, {"label": "C", "text": "电商互动行为"}, {"label": "D", "text": "游戏交互行为"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 204, "text": "在投放方案的撰写过程中，有哪些常见且实用的技巧：", "options": [{"label": "A", "text": "借助营销通案、商业市场相关营销报告、相关政策和报价文件等进行资料数据收集。"}, {"label": "B", "text": "借助思维导图梳理逻辑，拓展思路，提高撰写方案的效率。"}, {"label": "C", "text": "综合运用数据处理和可视化的方法，将重要数据、变动趋势生动呈现出来。"}, {"label": "D", "text": "参考广告主行业常见玩法，对广告主进行个性化定制。"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "08 职业素养", "moduleId": 8}, {"q": 205, "text": "业务数据分析常用的数据字段主要有？", "options": [{"label": "A", "text": "时间"}, {"label": "B", "text": "空间"}, {"label": "C", "text": "指标"}, {"label": "D", "text": "维度"}], "answer": "ACD", "explanation": "", "type": "multi", "module": "07 数据分析", "moduleId": 7}, {"q": 206, "text": "适合下载类客户的转化跟踪方式为？", "options": [{"label": "A", "text": "pi对接"}, {"label": "B", "text": "js代码加载"}, {"label": "C", "text": "使用已对接的第三方监测平台"}, {"label": "D", "text": "不用对接"}], "answer": "AC", "explanation": "", "type": "multi", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 207, "text": "当产品投放到iOS系统下时，下列转化目标可被转化跟踪工具支持的是：", "options": [{"label": "A", "text": "下载"}, {"label": "B", "text": "激活"}, {"label": "C", "text": "注册"}, {"label": "D", "text": "付费"}], "answer": "BCD", "explanation": "", "type": "multi", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 208, "text": "下列app流量位中，支持进行投放竞价广告的是：", "options": [{"label": "A", "text": "西瓜视频"}, {"label": "B", "text": "抖音短视频"}, {"label": "C", "text": "火山小视频"}, {"label": "D", "text": "今日头条"}, {"label": "E", "text": "穿山甲"}], "answer": "ABCDE", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 209, "text": "在进行广告视频制作时，以下说法正确的是", "options": [{"label": "A", "text": "建议对关键内容部分添加字幕，将视觉与听觉结合，直观展现卖点，提升转化率；但需注意不要遮挡视频主体"}, {"label": "B", "text": "一支视频建议对应一个推广目的，围绕一个核心主题点/卖点来传达核心内容，同时配合不同广告视频间的ABTest效果测试"}, {"label": "C", "text": "注意构图，常用的构图方法有：三分法则、中心构图法、黄金分割线法"}, {"label": "D", "text": "情景剧型，还原场景，增强用户带入感，直接触达用户痛点或解决用户痛点；故事性强，增加用户字对广告视频的阅读时间；需注意避免前期铺垫过长导致用户流失"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "07 数据分析", "moduleId": 7}, {"q": 210, "text": "巨量引擎广告投放平台中，广告预览的方式有", "options": [{"label": "A", "text": "使用广告账号登录今日头条客户端后预览"}, {"label": "B", "text": "绑定第三方账号预览"}, {"label": "C", "text": "APP扫码预览"}, {"label": "D", "text": "APP搜索广告计划ID预览"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 211, "text": "广告主如需进行落地页推广，下列可被选择的转化跟踪工具是：", "options": [{"label": "A", "text": "Xpath"}, {"label": "B", "text": "JS"}, {"label": "C", "text": "落地页API"}, {"label": "D", "text": "应用下载API"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 212, "text": "某广告主在投放了一段时问后，发现账户的转化人群重复率较高，下列对这种情况应对可能有效的是", "options": [{"label": "A", "text": "排除广告主转化人群包"}, {"label": "B", "text": "过滤已转化人群中广告账户选项"}, {"label": "C", "text": "排除行业人群包"}, {"label": "D", "text": "定向广告主展示人群包"}, {"label": "E", "text": "排除广告主展示人群包"}], "answer": "AB", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 213, "text": "今日头条强效赋能效果营销，三大核心驱动力分别是：", "options": [{"label": "A", "text": "大数据：多平台底层打通深度建模分析，营销前置。"}, {"label": "B", "text": "物联网：传感层、传输层和应用层将生产要素和供应链进行深度重组，成为信息化带动工业化的现实载体。"}, {"label": "C", "text": "人工智能：智能算法自主学习，提升营销效率与智能决策。"}, {"label": "D", "text": "多元场景：全流量打通，构建移动营销新矩阵"}, {"label": "E", "text": "移动通信：专业基站打通，覆盖4G网络应用。"}], "answer": "ACD", "explanation": "", "type": "multi", "module": "08 职业素养", "moduleId": 8}, {"q": 214, "text": "在巨量引擎广告投放平台的效果广告数据报表中，可以查看的数据有：", "options": [{"label": "A", "text": "广告组"}, {"label": "B", "text": "广告创意"}, {"label": "C", "text": "创意词包"}, {"label": "D", "text": "程序化创意"}, {"label": "E", "text": "广告计划"}], "answer": "ABCDE", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 215, "text": "小红在对客户进行推广产品创意策划撰写时，应做到哪些准备工作？", "options": [{"label": "A", "text": "研究产品属性"}, {"label": "B", "text": "忽略产品"}, {"label": "C", "text": "切入产品卖点"}, {"label": "D", "text": "脑补产品使用场景"}], "answer": "ACD", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 216, "text": "在游戏行业中，通常广告主会关注哪些效果数据指标？", "options": [{"label": "A", "text": "LTV"}, {"label": "B", "text": "付费数"}, {"label": "C", "text": "ARPU"}, {"label": "D", "text": "付费率"}, {"label": "E", "text": "留存"}], "answer": "ABCDE", "explanation": "", "type": "multi", "module": "07 数据分析", "moduleId": 7}, {"q": 217, "text": "以下关于抖音号粉丝定向，说法正确的是？", "options": [{"label": "A", "text": "支持按抖音号类别进行定向"}, {"label": "B", "text": "可过滤自有粉丝"}, {"label": "C", "text": "支持搜索抖音号"}, {"label": "D", "text": "可选在APP内有付费行为的用户"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 218, "text": "对于头条广告创意文案的撰写，正确方向是", "options": [{"label": "A", "text": "与用户切身相关"}, {"label": "B", "text": "热点话题"}, {"label": "C", "text": "提供信息福利"}, {"label": "D", "text": "越夸张越好"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 219, "text": "下列关于橙子建站的特点，说法正确的是：", "options": [{"label": "A", "text": "页面数据精准分析"}, {"label": "B", "text": "专享巨量引擎广告投放平台服务器"}, {"label": "C", "text": "有效提升广告竞争力"}, {"label": "D", "text": "模板推荐，助力高转化设计"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 220, "text": "在进行广告创意撰写时，应坚持", "options": [{"label": "A", "text": "真实性"}, {"label": "B", "text": "针对性"}, {"label": "C", "text": "效益性"}, {"label": "D", "text": "创新性"}, {"label": "E", "text": "亲近性"}], "answer": "ABCDE", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 221, "text": "营销师在进行广告竞标时，投放方案没有收到客户青睐，可能原因有", "options": [{"label": "A", "text": "在产品和用户分析基础上，综合呈现出定向策略，创意策略出价策略，优化策略"}, {"label": "B", "text": "完成问题和需求分析后，给出了简略的落地方案"}, {"label": "C", "text": "未能从团队运营情况增长情况，团队优势方面体现出自身优势"}, {"label": "D", "text": "来梳理出套户现有/历史投放中已存在待解决问题以及未来潜在需求"}], "answer": "BCD", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 222, "text": "在做视频广告创意时，可以做哪些类型的视屏？", "options": [{"label": "A", "text": "图片切换"}, {"label": "B", "text": "人口播"}, {"label": "C", "text": "录屏"}, {"label": "D", "text": "情景剧"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 223, "text": "影响计划的预估转化率因素有哪些？", "options": [{"label": "A", "text": "落地页素材相互性"}, {"label": "B", "text": "落地页相应速度"}, {"label": "C", "text": "广告素材"}, {"label": "D", "text": "目标出价"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 224, "text": "动态创意词包工具能够支持的词包类型有", "options": [{"label": "A", "text": "性别"}, {"label": "B", "text": "用餐类型"}, {"label": "C", "text": "区县"}, {"label": "D", "text": "运营商"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 225, "text": "下列关于门店推广目的的说法，正确的是：", "options": [{"label": "A", "text": "门店推广会动态显示LBS信息"}, {"label": "B", "text": "门店推广目的不会显示广告来源"}, {"label": "C", "text": "门店推广目的支持电话拨打、在线咨询等附加创意"}, {"label": "D", "text": "门店推广目的需要广告主先创建需要推广的门店，才可以创建计划"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 226, "text": "为什么使用头条自定义人群跑不出量？", "options": [{"label": "A", "text": "检查该人群包的覆盖率是否偏低"}, {"label": "B", "text": "通常覆盖的用户数偏少需要通过较高的出价来获取流量"}, {"label": "C", "text": "系统打压该功能使用，所以投不出去"}, {"label": "D", "text": "检查素材，预算，出价是否合理"}], "answer": "ABD", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 227, "text": "【抖音号推广】新加粉丝定向功能支持的是", "options": [{"label": "A", "text": "广告主可以选择指定抖音号的粉丝进行投放。"}, {"label": "B", "text": "广告主自主选择不投放给高活跃用户。"}, {"label": "C", "text": "广告主自主选择投放时过滤自己的粉丝。"}, {"label": "D", "text": "广告主自主选择不投放给关注数大于200、500、1000的用户。"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 228, "text": "今日头条DMP的核心功能有：", "options": [{"label": "A", "text": "上传包"}, {"label": "B", "text": "规则包"}, {"label": "C", "text": "扩展包"}, {"label": "D", "text": "运算包"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 229, "text": "下列关于计划诊断，属于诊断结果影响因素的是", "options": [{"label": "A", "text": "出价竞争力"}, {"label": "B", "text": "预算充足度"}, {"label": "C", "text": "定向质量度"}, {"label": "D", "text": "点击获取能力"}, {"label": "E", "text": "转化获取能力"}], "answer": "ABCDE", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 230, "text": "在工作沟通中，下列屈于表达三要素的是", "options": [{"label": "A", "text": "明确目标"}, {"label": "B", "text": "传递信息、思想、情感"}, {"label": "C", "text": "达成统一"}, {"label": "D", "text": "持续共同探讨"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 231, "text": "营销师工作中进行有效时间管理，最重要的意义是：", "options": [{"label": "A", "text": "更专注的做事"}, {"label": "B", "text": "在有限的时间里能完成更多的事"}, {"label": "C", "text": "给我们正确处理事情的方法"}, {"label": "D", "text": "更合理的分配时间"}], "answer": "ABD", "explanation": "", "type": "multi", "module": "08 职业素养", "moduleId": 8}, {"q": 232, "text": "下列属于广告落地页必备要素的是：", "options": [{"label": "A", "text": "创意和落地页的相关性要前后呼应"}, {"label": "B", "text": "落地页的核心内容要简洁清晰，并且前置到较为明显的位置"}, {"label": "C", "text": "合理使用转化按钮，并尽量缩短转化路径。电话、关注、优惠券在页面有转化按钮的引导"}, {"label": "D", "text": "落地页面的打开速度不超过15秒就好"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 233, "text": "下列关于巨量引擎效果类广告资源的说法，错误的是", "options": [{"label": "A", "text": "西瓜视频小视频信息流展现位置为小视频频道视频流的混排中"}, {"label": "B", "text": "抖音短视频信息流广告展现位置用户在推荐视频流向上滑动时会按照一定策略出现广告视频，位置随机"}, {"label": "C", "text": "今日头条问答详情页广告展现在问答详情页下方评论区下方"}, {"label": "D", "text": "火山小视频频道视频信息流支持的广告样式有大图、组图、小图、竖版视频、横版视频"}], "answer": "AC", "explanation": "", "type": "multi", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 234, "text": "在进行广告创意撰写时，应坚持：", "options": [{"label": "A", "text": "真实性"}, {"label": "B", "text": "针对性"}, {"label": "C", "text": "效益性"}, {"label": "D", "text": "创新性"}, {"label": "E", "text": "亲近性"}], "answer": "ABCDE", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 235, "text": "下列关于转化率，说法正确的是", "options": [{"label": "A", "text": "落地页质量差，设计不合理会导致转化率低"}, {"label": "B", "text": "广告素材创新度高，转化率低"}, {"label": "C", "text": "应用包体太大会导致转化率低"}, {"label": "D", "text": "广告文案素材和实际相符"}, {"label": "E", "text": "广告文案素材和实际差距大，转化率差"}], "answer": "ACE", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 236, "text": "计划诊断的结果是基于()等要素得出的。", "options": [{"label": "A", "text": "出价竞争力"}, {"label": "B", "text": "预算充足度"}, {"label": "C", "text": "转化获取能力"}, {"label": "D", "text": "点击获取能力"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 237, "text": "下列关于橙子建站，描述正确的的是", "options": [{"label": "A", "text": "专业服务于广告主的付费落地页制作工具"}, {"label": "B", "text": "个性化推荐更易产生高转化的参考模板"}, {"label": "C", "text": "适配广告平台oCPM投放，助力提升转化效果"}, {"label": "D", "text": "提供表单、咨询、电话、卡券、抽奖等丰富组件"}], "answer": "BCD", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 238, "text": "在投放数据分析中，通常我们需要从哪些维度来进行分析：", "options": [{"label": "A", "text": "受众人群"}, {"label": "B", "text": "广告创意"}, {"label": "C", "text": "流量位置"}, {"label": "D", "text": "落地页"}, {"label": "E", "text": "操作系统"}], "answer": "ABCDE", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 239, "text": "关于橙子建站，支持添加的有转化组件有：", "options": [{"label": "A", "text": "表单和电话"}, {"label": "B", "text": "地图和按钮"}, {"label": "C", "text": "微信复制"}, {"label": "D", "text": "在线咨询"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 240, "text": "下列关于应用下载与落地页的相同点，说法正确的是", "options": [{"label": "A", "text": "都可以设置应用包名"}, {"label": "B", "text": "都可以使用oCPM的出价方式"}, {"label": "C", "text": "都支持CPA出价形式"}, {"label": "D", "text": "都支持程序化创意"}, {"label": "E", "text": "都支持视频样式广告"}], "answer": "BDE", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 241, "text": "针对有软文推广需求又希望将自己的电商平台推广出去的本地行业的广告主，应选择哪些推广目的？", "options": [{"label": "A", "text": "PP应用"}, {"label": "B", "text": "门店推广"}, {"label": "C", "text": "文章推广"}, {"label": "D", "text": "产品目录"}, {"label": "E", "text": "落地页"}], "answer": "BCDE", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 242, "text": "信息流广告是位于社交媒体用户的_____、______和______内容流中的广告。", "options": [{"label": "A", "text": "好友动态"}, {"label": "B", "text": "点赞转发"}, {"label": "C", "text": "资讯媒体"}, {"label": "D", "text": "视听媒体"}, {"label": "E", "text": "个人资料"}], "answer": "ACD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 243, "text": "关于分app出价，下列说法正确的是", "options": [{"label": "A", "text": "分app出价是效率工具"}, {"label": "B", "text": "可实现一个计划同时投放多个app流量"}, {"label": "C", "text": "可以分APP设置和调整出价"}, {"label": "D", "text": "对后端roi没有帮助"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "08 职业素养", "moduleId": 8}, {"q": 244, "text": "在投放方案的撰写过程中，服务团队及服务体系的介绍部分建议包含：", "options": [{"label": "A", "text": "团队架构"}, {"label": "B", "text": "核心人员介绍"}, {"label": "C", "text": "团队运作体系"}, {"label": "D", "text": "投放监控与报表"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 245, "text": "关于广告落地页优化的方法，下列说法正确的是", "options": [{"label": "A", "text": "首屏精简信息。突出吸睛卖点"}, {"label": "B", "text": "落地页最佳呈现3-5屏信息"}, {"label": "C", "text": "线索收集目标突出"}, {"label": "D", "text": "落地页与素材匹配，保持色调一致"}], "answer": "ACD", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 246, "text": "有哪些可能性会导致头条监测数据与广告主监测数据不一致？", "options": [{"label": "A", "text": "后台填写了错误的监测链接"}, {"label": "B", "text": "第三方监测数据出现错误"}, {"label": "C", "text": "媒体方监测数据出现错误"}, {"label": "D", "text": "第三方和媒体方监测数据的具体方式不一致"}], "answer": "ABD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 247, "text": "在投放方案的撰写过程中，服务团队及服务体系的介绍部分应该包含：", "options": [{"label": "A", "text": "团队架构"}, {"label": "B", "text": "核心人员介绍"}, {"label": "C", "text": "团队运作体系"}, {"label": "D", "text": "投放监控与报表"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 248, "text": "在和客户沟通过程中，如何让你的客户感受到你的专业和态度？", "options": [{"label": "A", "text": "注意客户工作场合，选择合适的时间跟客户沟通"}, {"label": "B", "text": "注意声音的音量和语调，避免轻佻"}, {"label": "C", "text": "注意措辞，使用商务用的语句"}, {"label": "D", "text": "注意情感联系，经常使用客户的方言和客户拉近距离"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "05 客户营销与提案", "moduleId": 5}, {"q": 249, "text": "关于制作广告创意前，需要进行哪些动作分析？", "options": [{"label": "A", "text": "分析用户画像"}, {"label": "B", "text": "分析产品特点"}, {"label": "C", "text": "分析用户使用场景"}, {"label": "D", "text": "分析转就跟踪方式"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 250, "text": "对于头条广告创意文案的撰写，正确方向是？", "options": [{"label": "A", "text": "与用户切身相关"}, {"label": "B", "text": "热点话题"}, {"label": "C", "text": "提供信息福利"}, {"label": "D", "text": "越夸张越好"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 251, "text": "在和客户沟通过程中，如何让你的客户感受到你的专业和态度？", "options": [{"label": "A", "text": "注意客户工作场合，选择合适的时间跟客户沟通"}, {"label": "B", "text": "注意声音的音量和语调，避免轻佻"}, {"label": "C", "text": "注意措辞，使用商务用的语句"}, {"label": "D", "text": "注意情感联系，经常使用客户的方言和客户拉近距离"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "05 客户营销与提案", "moduleId": 5}, {"q": 252, "text": "飞鱼CRM系统中，“管理员”角色有以下哪些权限？", "options": [{"label": "A", "text": "销售线索"}, {"label": "B", "text": "线索公海"}, {"label": "C", "text": "首页"}, {"label": "D", "text": "通话记录"}], "answer": "ACD", "explanation": "", "type": "multi", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 253, "text": "对于合作过的老客户，在策划撰写投放方案时，建议包含的内容是：", "options": [{"label": "A", "text": "分行业列举合作客户，重点列举广告主所在行业的相关客户合作情况。"}, {"label": "B", "text": "简述巨量引擎各个资源位定位、用户特征和目前支持的素材类型。"}, {"label": "C", "text": "列举合作的知名客户，重点列举广告主所在行业TOP3。"}, {"label": "D", "text": "重点呈现出跟客户的合作年限、合作业务额、客户满意度。"}], "answer": "ACD", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 254, "text": "下列广告文案中，涉及绝对化用语描述的是", "options": [{"label": "A", "text": "服务水平NO.1"}, {"label": "B", "text": "价格全城最优惠"}, {"label": "C", "text": "我司产品为国家级产品"}, {"label": "D", "text": "本次旅行目的地为：世界面积最大国家俄罗斯"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 255, "text": "下列属于易拍APP优势的是：", "options": [{"label": "A", "text": "提供具有正式版权的背景音乐140首，过审率更高，无需承担侵权风险"}, {"label": "B", "text": "拍摄、剪辑功能丰富，剪音乐、人脸特效、镜头变速等"}, {"label": "C", "text": "拥有多种特效，与用户内容更加贴近"}, {"label": "D", "text": "打通今日头条投放管理平台，视频制作完成可同步至今日头条投放管理平台，更方便管理"}, {"label": "E", "text": "定期分享优秀案例，精选行业模板并附制作教程"}], "answer": "ABCDE", "explanation": "", "type": "multi", "module": "06 合规与审核", "moduleId": 6}, {"q": 256, "text": "下列属于AD后台创意优化工具的是", "options": [{"label": "A", "text": "程序化创意"}, {"label": "B", "text": "云图DMP"}, {"label": "C", "text": "巨量创意"}, {"label": "D", "text": "系统推荐标题"}], "answer": "ACD", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 257, "text": "在进行客户推广产品创意策划撰写时，应做到", "options": [{"label": "A", "text": "研究产品属性"}, {"label": "B", "text": "忽略产品"}, {"label": "C", "text": "切入产品卖点"}, {"label": "D", "text": "脑补产品使用场景"}], "answer": "ACD", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 258, "text": "面对一k12教育行业广告主制定定向策略时，下列不恰当的建议有：", "options": [{"label": "A", "text": "年龄定向在24-40的父母群体"}, {"label": "B", "text": "可使用云图平台教育人群包"}, {"label": "C", "text": "多计划使用相同定向"}, {"label": "D", "text": "多定向交叉使用"}], "answer": "CD", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 259, "text": "下列描述符合智能咨询页功能的是", "options": [{"label": "A", "text": "可自动优化广告投放"}, {"label": "B", "text": "可实时对转化进行监控"}, {"label": "C", "text": "可设置多个快速回复按钮"}, {"label": "D", "text": "可自定义精美咨询页面"}], "answer": "BCD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 260, "text": "今日头条广告有哪些优势", "options": [{"label": "A", "text": "行业领先的个性化机器推荐算法"}, {"label": "B", "text": "海量样本数据，精细化管理"}, {"label": "C", "text": "千人千面深度分析用户兴趣偏好"}, {"label": "D", "text": "行业内第一家广告全面支持检测"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 261, "text": "关于广告主推广的入口图，下列描述正确的是：", "options": [{"label": "A", "text": "入口图不得添加虚假的“关闭（叉号）图标”"}, {"label": "B", "text": "入口图不得使用虚假的“播放/暂停按钮”"}, {"label": "C", "text": "入口图不得使用虚假的“未读消息图标”"}, {"label": "D", "text": "入口图内容可以和落地页内容不一致"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 262, "text": "橙子建站落地页热力图可以反映哪些数据维度类型？", "options": [{"label": "A", "text": "浏览触达"}, {"label": "B", "text": "注意力"}, {"label": "C", "text": "独立用户量访问量"}, {"label": "D", "text": "点击分布"}], "answer": "ABD", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 263, "text": "在今日头条广告投放管理平台中，广告计划状态显示为已完成的条件是：", "options": [{"label": "A", "text": "已完成计划预算"}, {"label": "B", "text": "已完成投放时间投放"}, {"label": "C", "text": "已完成目标激活数"}, {"label": "D", "text": "已完成目标点击数"}], "answer": "AB", "explanation": "", "type": "multi", "module": "07 数据分析", "moduleId": 7}, {"q": 264, "text": "在巨量引擎广告投放平台中，广告计划设置层级包含的投放方式有", "options": [{"label": "A", "text": "优先跑量"}, {"label": "B", "text": "均衡投放"}, {"label": "C", "text": "加速投放"}, {"label": "D", "text": "优先低成本"}], "answer": "ABD", "explanation": "", "type": "multi", "module": "07 数据分析", "moduleId": 7}, {"q": 265, "text": "下面属于同步监测特点的是", "options": [{"label": "A", "text": "传输方式为头条客户端一第三方监测服务器一客户落地页"}, {"label": "B", "text": "实现方式·广告一监测代码中间页一自动跳转客户落地页"}, {"label": "C", "text": "填写位置在落地页链接"}, {"label": "D", "text": "用户体验方面·不带跳转，用户无感知"}, {"label": "E", "text": "能够正常访问和跳转"}], "answer": "ABCE", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 266, "text": "关于工作沟通中的积极回应，下列说法正确的是", "options": [{"label": "A", "text": "在沟通过程中适当微笑回应"}, {"label": "B", "text": "用说明的语句重述对方刚说过的话"}, {"label": "C", "text": "适时记下一些重要的内容"}, {"label": "D", "text": "用肢体语言相应，如点头、身体前倾"}], "answer": "ABCD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 267, "text": "通常情况下，广告点击率低可以通过哪个方式改善：", "options": [{"label": "A", "text": "优化文案"}, {"label": "B", "text": "优化定向"}, {"label": "C", "text": "优化素材"}, {"label": "D", "text": "优化落地页"}], "answer": "ABC", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 268, "text": "当发现账户转化人群重复比较高时，可以给与哪些建议：", "options": [{"label": "A", "text": "排除广告主转化人群包"}, {"label": "B", "text": "过滤已转化人群中广告账户选项"}, {"label": "C", "text": "排除行业人群包"}, {"label": "D", "text": "排除广告主展示人群"}], "answer": "AB", "explanation": "", "type": "multi", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 269, "text": "“复制已有定向”支持的功能有哪些：", "options": [{"label": "A", "text": "复制广告计划的地域"}, {"label": "B", "text": "复制广告计划的名称"}, {"label": "C", "text": "复制广告计划的兴趣分类"}, {"label": "D", "text": "复制广告计划的平台设置"}, {"label": "E", "text": "可复制广告预算设置"}], "answer": "ACD", "explanation": "", "type": "multi", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 270, "text": "客户的效果类投放目标，一般都包含：", "options": [{"label": "A", "text": "品牌需求"}, {"label": "B", "text": "新客需求"}, {"label": "C", "text": "公关需求"}, {"label": "D", "text": "留存需求"}], "answer": "BD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 271, "text": "在使用建议出价工具时，可能导致投前出价不符合预期的原因是：", "options": [{"label": "A", "text": "同类计划出价水平过高/过低"}, {"label": "B", "text": "当前计划推广物的单价与行业平均单价差异过大"}, {"label": "C", "text": "计划点击率与同类计划平均差异过小"}, {"label": "D", "text": "历史平均的点击率与行业均值差异过大"}], "answer": "ABD", "explanation": "", "type": "multi", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 272, "text": "在进行客户自身财务状况分析时，需要分析的维度包含：", "options": [{"label": "A", "text": "营收状况"}, {"label": "B", "text": "投放配合度"}, {"label": "C", "text": "融资状况"}, {"label": "D", "text": "效果预算"}], "answer": "ACD", "explanation": "", "type": "multi", "module": "07 数据分析", "moduleId": 7}, {"q": 273, "text": "质量度得分每4小时重新计算一次，所以修改计划后质量度得分不一定会立刻产生变化。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 274, "text": "自动出价产品支持仅支持ocpm出价方式。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 275, "text": "信息流营销师在对工作进行有效时间管理时，可以利用四象限法则对要做到的事情进行优先级的排序。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "08 职业素养", "moduleId": 8}, {"q": 276, "text": "出价方式里，手动、自动不可以互相切换。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 277, "text": "当客户推广没有明确定向人群的时候可以建议客户使用系统定向。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 278, "text": "通常情况下，在进行广告创意撰写时，我们可以强调产品卖点与优势，激发用户进行转化。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 279, "text": "客户一旦使用了今日头条DMP功能创建的自定义人群包，建议不使用其他定向条件，否则会让受众进一步变窄。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 280, "text": "客户一旦使用了巨量引擎广告投放平台DMP功能创建的自定义人群包，建议不使用其他定向条件，否则会让受众进一步变窄。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 281, "text": "地域定向可以支持经纬度定向。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 282, "text": "CPA不能使用转化跟踪。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 283, "text": "卡券可以设置自动填充手机号。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 284, "text": "质量度得分每4小时重新计算一次，所以修改计划后质量度得分不一定会立刻产生变化。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 285, "text": "为了保证用户推广页面的简洁，只插入一次表单效果最好。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 286, "text": "点击“一键优化”按钮后，可快速复制当前计划设置并对影响计划效果的设置自动进行优化，创建新的计划进行投放", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 287, "text": "一般为了全面介绍产品的功能，广告落地页的信息越详尽越好。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 288, "text": "转化跟踪工具是一款通过设置转化目标（比如有多少人完成了注册），跟踪转化状态，衡量推广转化效果的工具。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 289, "text": "自动出价不支持深度转化。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 290, "text": "第一次见客户，认真整理材料、正式着装，是利用了“投射效应”来获取客户认同。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "08 职业素养", "moduleId": 8}, {"q": 291, "text": "营销师可以根据客户的产品和用户画像，结合自身经验，主观地为广告主分析巨量引擎平台各资源位的优劣。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 292, "text": "关于广告创意文案，文案需要专业，大部分用户看不懂也没有关系。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 293, "text": "一般为了全面介绍产品的功能，广告落地页的信息越详尽越好，2-3屏的广告落地页转化率更高。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 294, "text": "通常情况下，在进行广告创意撰写时，我们可以强调产品卖点与优势，激发用户进行转化。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 295, "text": "落地页下载转化跟踪支持非插件Xpath和插件Xpath以及第三方JS代码工具，购买和激活支持API工具。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 296, "text": "{地点}人有福啦！这里的衣服今日5折优惠，赶紧抢！——这里的动态词包使用是错误的，应该改为日期动态词包。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 297, "text": "抖音短视频竞价广告支持大图、组图、动图及视频多种广告样式。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 298, "text": "在选择按钮文案的时候需要匹配活动，如可以把提交的文案换成“我要报名”来提升转化率。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 299, "text": "在进行广告预览时，会产生相应的广告费用。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 300, "text": "在巨量引擎广告投放平台中，基础定向中的用户性别及年龄是根据真实的用户信息判断出来的。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 301, "text": "小明建立了两条广告计划，使用的广告文案和素材都不同，可以进行ABtest测试。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 302, "text": "小6客服不支持个人专用语的设置。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 303, "text": "激励视频视频时长控制在60s内。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 304, "text": "通常情况下，APP的注册流程越复杂越长，注册率越高。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 305, "text": "转化跟踪工具是一款通过设置转化目标（比如有多少人完成了注册），跟踪转化状态，衡量推广转化效果的工具。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "04 深度转化与线索", "moduleId": 4}, {"q": 306, "text": "巨量引擎广告投放平台转化跟踪工具分为代码检测转化JS、路径转化Xpath、应用下载,API、SDK，其中JS和Xpath主要应用于落地页推广。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 307, "text": "自动出价仅oCPM计划使用。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 308, "text": "广告主、广告经营者和广告发布者对其在广告活动中实施的违法行为及其造成的危害，应承担强制性法律上的责任。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 309, "text": "自动出价会根据预算为您寻找最优成本。通常情况下，预算越高，寻找优质流量的难度越高，相应的拉高探索成本。所以建议客户设置真是能接受的价格。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "07 数据分析", "moduleId": 7}, {"q": 310, "text": "通常情况下，落地页的响应时间越长，其转化率越好。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 311, "text": "在落地页中，阅读时长从根本反应广告落地页的吸引程度。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "03 账户搭建与创意", "moduleId": 3}, {"q": 312, "text": "关于投放管家，新建项目组，开启投放后将由系统全局操作，无法手动干预。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 313, "text": "资讯流的优点是对用户来说体验相对较好，对广告主来说可以根据用户的兴趣进行精准投放。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 314, "text": "今日头条是一款基于数据挖掘技术的个性化资讯推荐引擎产品，可以聪明地分析用户的兴趣爱好，为你推荐你喜欢和应知的内容。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 315, "text": "客户一旦使用了巨量引擎广告投放平台DMP功能创建的自定义人群包，建议不使用其他定向条件，否则会让受众进一步变窄。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "02 投放工具与产品", "moduleId": 2}, {"q": 316, "text": "信息路广告后台可以支持否定关键词的添加。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "B", "explanation": "", "type": "single", "module": "01 行业与平台基础", "moduleId": 1}, {"q": 317, "text": "当客户按照广告计划维度查看线索数量并且点击线索详情后，出现的“创建时间”是指收集线索的时间。", "options": [{"label": "A", "text": "正确"}, {"label": "B", "text": "错误"}], "answer": "A", "explanation": "", "type": "single", "module": "04 深度转化与线索", "moduleId": 4}];
 var QUIZ_ID = 'v3';
 var QUIZ_TITLE = '认证理论试题库 · 317题';
-var STORE_KEY = 'qz_' + QUIZ_ID;
 
-var S = {
-  mode: 'sequential', idx: 0, filter: 'all',
-  answers: {}, errCount: {}, okCount: {}, cut: [], rand: [],
-  examQs: [], examAns: {}, examStart: 0, examTimer: null, examHist: []
+// ===== STATE =====
+var STORE_KEY = 'quiz_' + QUIZ_ID;
+var STATE = {
+  mode: 'sequential',      // sequential | random | wrong | exam
+  currentIndex: 0,
+  filter: 'all',
+  // Per-question tracking
+  answers: {},       // {qNum: {selected, correct, time}}
+  errorCount: {},     // {qNum: count}
+  correctCount: {},   // {qNum: count}
+  // Cut questions
+  cutQuestions: [],    // [qNum, ...]
+  // Random order (cached)
+  randomOrder: [],
+  // Exam
+  examConfig: { total: 100, timeLimit: 0 },
+  examQuestions: [],    // Question objects for current exam
+  examAnswers: {},      // Answers during exam
+  examStartTime: 0,
+  examTimer: null,
+  // History
+  examHistory: []
 };
 
-function load(){
-  try{var r=localStorage.getItem(STORE_KEY);if(r){var s=JSON.parse(r);
-  S.mode=s.mode||'sequential';S.answers=s.answers||{};S.errCount=s.errCount||{};
-  S.okCount=s.okCount||{};S.cut=s.cut||[];S.examHist=s.examHist||[]}}catch(e){}
+// ===== PERSISTENCE =====
+function loadState(){
+  try{
+    var raw = localStorage.getItem(STORE_KEY);
+    if(raw){
+      var s = JSON.parse(raw);
+      STATE.mode = s.mode || 'sequential';
+      STATE.answers = s.answers || {};
+      STATE.errorCount = s.errorCount || {};
+      STATE.correctCount = s.correctCount || {};
+      STATE.cutQuestions = s.cutQuestions || [];
+      STATE.examHistory = s.examHistory || [];
+    }
+  }catch(e){}
 }
-function save(){
-  try{localStorage.setItem(STORE_KEY,JSON.stringify({mode:S.mode,answers:S.answers,errCount:S.errCount,okCount:S.okCount,cut:S.cut,examHist:S.examHist}))}catch(e){}
+function saveState(){
+  try{
+    localStorage.setItem(STORE_KEY, JSON.stringify({
+      mode: STATE.mode,
+      answers: STATE.answers,
+      errorCount: STATE.errorCount,
+      correctCount: STATE.correctCount,
+      cutQuestions: STATE.cutQuestions,
+      examHistory: STATE.examHistory
+    }));
+  }catch(e){}
+}
+function clearState(){
+  if(confirm('确定清空所有答题进度？包括错题记录和斩题。')){
+    STATE.answers = {}; STATE.errorCount = {}; STATE.correctCount = {};
+    STATE.cutQuestions = []; STATE.examHistory = [];
+    saveState(); renderAll();
+  }
 }
 
-function allQs(){ return QUESTIONS.slice(); }
+// ===== QUESTION FILTERING =====
+function getAllQuestions(){
+  return QUESTIONS.slice();
+}
 
-function filterQs(){
-  var qs = allQs();
-  if(S.mode!=='exam') qs=qs.filter(function(q){return S.cut.indexOf(q.q)===-1});
-  if(S.mode==='wrong'){qs=qs.filter(function(q){return S.errCount[q.q]>0});qs.sort(function(a,b){return(S.errCount[b.q]||0)-(S.errCount[a.q]||0)})}
-  if(S.filter==='unanswered') qs=qs.filter(function(q){return !S.answers[q.q]});
-  else if(S.filter==='wrong') qs=qs.filter(function(q){return S.answers[q.q]&&!S.answers[q.q].correct});
-  else if(S.filter==='high-error'){qs=qs.filter(function(q){return(S.errCount[q.q]||0)>=3});qs.sort(function(a,b){return(S.errCount[b.q]||0)-(S.errCount[a.q]||0)})}
-  if(S.mode==='random'){
-    if(S.rand.length!==qs.length) S.rand=shuffle(qs.map(function(_,i){return i}));
-    var o=[];for(var i=0;i<S.rand.length;i++){if(S.rand[i]<qs.length)o.push(qs[S.rand[i]])}qs=o;
+function getActiveQuestions(){
+  var qs = getAllQuestions();
+  // In exam mode, use exam questions
+  if(STATE.mode === 'exam'){
+    return STATE.examQuestions;
+  }
+  // Filter cut questions (not in exam mode)
+  if(STATE.mode !== 'exam'){
+    qs = qs.filter(function(q){ return STATE.cutQuestions.indexOf(q.q) === -1; });
+  }
+  // Mode filtering
+  if(STATE.mode === 'wrong'){
+    qs = qs.filter(function(q){ return STATE.errorCount[q.q] > 0; });
+    qs.sort(function(a,b){ return (STATE.errorCount[b.q]||0) - (STATE.errorCount[a.q]||0); });
+  }
+  // Filter
+  if(STATE.filter === 'unanswered'){
+    qs = qs.filter(function(q){ return !STATE.answers[q.q]; });
+  }else if(STATE.filter === 'wrong'){
+    qs = qs.filter(function(q){ return STATE.answers[q.q] && !STATE.answers[q.q].correct; });
+  }else if(STATE.filter === 'answered'){
+    qs = qs.filter(function(q){ return STATE.answers[q.q]; });
+  }else if(STATE.filter === 'high-error'){
+    qs = qs.filter(function(q){ return (STATE.errorCount[q.q]||0) >= 3; });
+    qs.sort(function(a,b){ return (STATE.errorCount[b.q]||0) - (STATE.errorCount[a.q]||0); });
+  }
+  // Random order
+  if(STATE.mode === 'random'){
+    if(STATE.randomOrder.length !== qs.length){
+      STATE.randomOrder = shuffle(qs.map(function(_,i){ return i; }));
+    }
+    var ordered = [];
+    for(var i = 0; i < STATE.randomOrder.length; i++){
+      if(STATE.randomOrder[i] < qs.length) ordered.push(qs[STATE.randomOrder[i]]);
+    }
+    qs = ordered;
   }
   return qs;
 }
 
-function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t}return b}
-
-function stats(){
-  var all=allQs(),act=filterQs();
-  var ad=0,ok=0,ng=0;
-  Object.keys(S.answers).forEach(function(k){if(S.answers[k]){ad++;if(S.answers[k].correct)ok++;else ng++}});
-  return {total:act.length,allTotal:all.length,answered:ad,correct:ok,wrong:ng,cutCount:S.cut.length};
-}
-
-function curQ(){
-  var qs=filterQs();if(qs.length===0)return null;
-  if(S.idx>=qs.length)S.idx=qs.length-1;if(S.idx<0)S.idx=0;return qs[S.idx];
-}
-
-function renderAll(){
-  save();updateTop();updateModes();updateSub();updateExamBar();
-  if(S.mode==='exam'&&S.examQs.length>0){
-    var rem=S.examQs.length-Object.keys(S.examAns).length;
-    document.getElementById('examRemain').textContent=rem;
-    if(rem===0){finishExam();return}
+function shuffle(arr){
+  var a = arr.slice();
+  for(var i = a.length-1; i > 0; i--){
+    var j = Math.floor(Math.random() * (i+1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
   }
-  renderQ();
+  return a;
 }
 
-function updateTop(){
-  var s=stats();
-  if(S.mode==='exam'){document.getElementById('an').textContent=Object.keys(S.examAns).length;document.getElementById('tn').textContent=S.examQs.length}
-  else{document.getElementById('an').textContent=s.answered;document.getElementById('tn').textContent=s.total}
-  document.getElementById('cc').textContent=s.correct;document.getElementById('wc').textContent=s.wrong;document.getElementById('cutc').textContent=s.cutCount;
-}
-function updateModes(){document.querySelectorAll('#modes button').forEach(function(b){b.classList.toggle('on',b.dataset.mode===S.mode)})}
-function updateExamBar(){var b=document.getElementById('examBar');if(S.mode==='exam'){b.classList.add('show');document.getElementById('examTotal').textContent=S.examQs.length;document.getElementById('examMax').textContent=calcMax()}}
-function updateSub(){document.querySelectorAll('.subbar .filter button').forEach(function(b){b.classList.toggle('on',b.dataset.filter===S.filter)})}
-
-function renderQ(){
-  var q=curQ(),qs=filterQs(),main=document.getElementById('main'),pi=document.getElementById('pi');
-  if(qs.length===0){main.innerHTML='<div style=\"text-align:center;padding:80px 20px;color:#aaa\">无题目</div>';pi.textContent='0/0';return}
-  pi.textContent=(S.idx+1)+'/'+qs.length;
-  var ans=(S.mode==='exam')?S.examAns[q.q]:S.answers[q.q],answered=!!ans,isCut=S.cut.indexOf(q.q)!==-1;
-  var h='<div class=\"qcard'+(answered?(ans.correct?' answered':' failed'):'')+'\">';
-  h+='<button class=\"cut'+(isCut?' on':'')+'\" data-q=\"'+q.q+'\">'+(isCut?'已斩':'斩')+'</button>';
-  h+='<div class=\"qheader\"><span class=\"qnum\">'+q.q+'. '+esc(q.text)+'</span></div>';
-  h+='<div class=\"qbadges\" style=\"margin-bottom:10px\">';
-  h+='<span class=\"badge-type\">'+({single:'单选',multi:'多选',tf:'判断'}[q.type]||'单选')+'</span>';
-  h+='<span class=\"badge-mod\">'+esc(q.module||'')+'</span>';
-  if(S.errCount[q.q]>=3) h+='<span class=\"badge-hot\">易错×'+S.errCount[q.q]+'</span>';
-  h+='</div><div class=\"options\">';
-  q.options.forEach(function(o){
-    var cls='opt';
-    if(answered){if(o.label===q.answer)cls+=' reveal';else if(ans.selected.indexOf(o.label)!==-1&&!ans.correct)cls+=' bad';if(o.label!==q.answer&&ans.selected.indexOf(o.label)===-1)cls+=' fade'}
-    if(!answered) cls+=' sel';
-    h+='<div class=\"'+cls+'\" data-label=\"'+o.label+'\" data-q=\"'+q.q+'\"><span class=\"lb\">'+esc(o.label)+'</span><span>'+esc(o.text)+'</span></div>';
+// ===== STATS =====
+function getStats(){
+  var all = getAllQuestions();
+  var active = getActiveQuestions();
+  var answered = 0, correct = 0, wrong = 0;
+  Object.keys(STATE.answers).forEach(function(k){
+    if(STATE.answers[k]){
+      answered++;
+      if(STATE.answers[k].correct) correct++; else wrong++;
+    }
   });
-  h+='</div>';
-  if(answered){
-    h+='<div class=\"fb show '+(ans.correct?'good':'bad')+'\"><div class=\"fbl\">'+(ans.correct?'✓ 回答正确':'✗ 回答错误')+'</div>';
-    if(!ans.correct) h+='<div>正确答案：<b>'+esc(q.answer)+'</b></div>';
-    if(q.explanation) h+='<div style=\"margin-top:4px;color:#666\">'+esc(q.explanation)+'</div>';
-    if(q.module) h+='<div class=\"fbmod\">📚 '+esc(q.module)+'</div>';
-    h+='<span class=\"retry\" data-q=\"'+q.q+'\">重做</span></div>';
+  return {
+    total: active.length,
+    allTotal: all.length,
+    answered: answered,
+    correct: correct,
+    wrong: wrong,
+    cutCount: STATE.cutQuestions.length
+  };
+}
+
+// ===== RENDER =====
+function renderAll(){
+  saveState();
+  updateHeader();
+  updateModes();
+  updateExamBar();
+  updateFilter();
+  if(STATE.mode === 'exam' && STATE.examQuestions.length > 0){
+    var rem = STATE.examQuestions.length - Object.keys(STATE.examAnswers).length;
+    document.getElementById('examRemain').textContent = rem;
+    if(rem === 0){
+      finishExam();
+      return;
+    }
   }
-  h+='</div>';main.innerHTML=h;bindEvts();
+  renderQuestion();
 }
 
-function esc(s){if(!s)return'';var d=document.createElement('div');d.textContent=s;return d.innerHTML}
-function findQ(n){var a=allQs();for(var i=0;i<a.length;i++){if(a[i].q===n)return a[i]}return null}
+function updateHeader(){
+  var s = getStats();
+  if(STATE.mode === 'exam'){
+    document.getElementById('an').textContent = Object.keys(STATE.examAnswers).length;
+    document.getElementById('tn').textContent = STATE.examQuestions.length;
+  }else{
+    document.getElementById('an').textContent = s.answered;
+    document.getElementById('tn').textContent = s.total;
+  }
+  document.getElementById('cc').textContent = s.correct;
+  document.getElementById('wc').textContent = s.wrong;
+  document.getElementById('cutc').textContent = s.cutCount;
+  var pct = s.allTotal > 0 ? (s.answered / s.allTotal * 100) : 0;
+  document.getElementById('pf').style.width = pct + '%';
+}
 
-function bindEvts(){
-  document.querySelectorAll('.opt.sel').forEach(function(el){el.addEventListener('click',function(){
-    var n=parseInt(el.dataset.q),l=el.dataset.label,q=findQ(n);if(!q)return;
-    var ok=(l===q.answer);
-    if(S.mode==='exam'){S.examAns[n]={selected:l,correct:ok,time:Date.now()}}
-    else{S.answers[n]={selected:l,correct:ok,time:Date.now()};if(ok){S.okCount[n]=(S.okCount[n]||0)+1}else{S.errCount[n]=(S.errCount[n]||0)+1}}
+function updateModes(){
+  document.querySelectorAll('#modes button').forEach(function(b){
+    b.classList.toggle('active', b.dataset.mode === STATE.mode);
+  });
+}
+
+function updateExamBar(){
+  var bar = document.getElementById('examBar');
+  if(STATE.mode === 'exam'){
+    bar.classList.add('show');
+    document.getElementById('examTotal').textContent = STATE.examQuestions.length;
+    document.getElementById('examMax').textContent = calcMaxScore();
+  }else{
+    bar.classList.remove('show');
+  }
+}
+
+function updateFilter(){
+  document.querySelectorAll('.filter button[data-filter]').forEach(function(b){
+    b.classList.toggle('active', b.dataset.filter === STATE.filter);
+  });
+}
+
+function getCurrentQuestion(){
+  var qs = getActiveQuestions();
+  if(qs.length === 0) return null;
+  if(STATE.currentIndex >= qs.length) STATE.currentIndex = qs.length - 1;
+  if(STATE.currentIndex < 0) STATE.currentIndex = 0;
+  return qs[STATE.currentIndex];
+}
+
+function renderQuestion(){
+  var q = getCurrentQuestion();
+  var qs = getActiveQuestions();
+  var main = document.getElementById('main');
+  var bottomNav = document.getElementById('bottomNav');
+  var pi = document.getElementById('pi');
+
+  if(qs.length === 0){
+    main.innerHTML = '<div style=\"text-align:center;padding:60px 20px;color:#999\">此模式下暂无题目</div>';
+    bottomNav.style.display = 'flex';
+    pi.textContent = '0/0';
+    return;
+  }
+
+  pi.textContent = (STATE.currentIndex + 1) + '/' + qs.length;
+
+  var ans = (STATE.mode === 'exam') ? STATE.examAnswers[q.q] : STATE.answers[q.q];
+  var answered = !!ans;
+  var isCut = STATE.cutQuestions.indexOf(q.q) !== -1;
+
+  var html = '<div class="qcard' + (answered ? (ans.correct ? ' correct' : ' wrong') : '') + (isCut ? ' cut' : '') + '">';
+
+  // Cut button
+  html += '<button class="cut-btn' + (isCut ? ' cut' : '') + '" data-q="' + q.q + '">' + (isCut ? '已斩' : '斩') + '</button>';
+
+  // Header
+  html += '<div class="qheader">';
+  html += '<span class="qnum">第 ' + q.q + ' 题</span>';
+  html += '<div class="qbadges">';
+  html += '<span class="qtype">' + ({single:'单选',multi:'多选',tf:'判断'}[q.type]||'单选') + '</span>';
+  html += '<span class="qmodule">' + (q.module||'') + '</span>';
+  if(STATE.errorCount[q.q] >= 3) html += '<span style="background:#ffebee;color:#c62828">易错×' + STATE.errorCount[q.q] + '</span>';
+  html += '</div></div>';
+
+  // Question text
+  html += '<div class="qtext">' + esc(q.text) + '</div>';
+
+  // Options
+  html += '<div class="options">';
+  q.options.forEach(function(opt){
+    var cls = 'option';
+    if(answered){
+      if(opt.label === q.answer) cls += ' reveal';
+      else if(ans.selected.indexOf(opt.label) !== -1 && !ans.correct) cls += ' wrong';
+      if(opt.label !== q.answer && ans.selected.indexOf(opt.label) === -1) cls += ' dim';
+    }
+    if(!answered) cls += ' selectable';
+    html += '<div class="' + cls + '" data-label="' + opt.label + '" data-q="' + q.q + '">';
+    html += '<span class="label">' + esc(opt.label) + '</span>';
+    html += '<span>' + esc(opt.text) + '</span>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // Feedback
+  if(answered){
+    var fbCls = ans.correct ? 'ok' : 'no';
+    var fbIcon = ans.correct ? '✓ 回答正确' : '✗ 回答错误';
+    html += '<div class="feedback show ' + fbCls + '">';
+    html += '<div class="fb-label">' + fbIcon + '</div>';
+    if(!ans.correct){
+      html += '<div>正确答案：<b>' + esc(q.answer) + '</b></div>';
+    }
+    if(q.explanation){
+      html += '<div style="margin-top:4px">' + esc(q.explanation) + '</div>';
+    }
+    if(q.module){
+      html += '<div class="fb-module">📚 ' + esc(q.module) + '</div>';
+    }
+    html += '<button class="retry-btn" data-q="' + q.q + '">重做本题</button>';
+    html += '</div>';
+  }
+
+  html += '</div>';
+  main.innerHTML = html;
+
+  bindEvents();
+}
+
+function esc(s){ if(!s) return ''; var d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+// ===== EVENTS =====
+function bindEvents(){
+  // Option clicks
+  document.querySelectorAll('.option.selectable').forEach(function(el){
+    el.addEventListener('click', function(){
+      var qnum = parseInt(el.dataset.q);
+      var label = el.dataset.label;
+      var q = findQ(qnum);
+      if(!q) return;
+
+      var correct = (label === q.answer);
+      var key = qnum;
+
+      if(STATE.mode === 'exam'){
+        STATE.examAnswers[key] = {selected: label, correct: correct, time: Date.now()};
+      }else{
+        STATE.answers[key] = {selected: label, correct: correct, time: Date.now()};
+        if(correct){
+          STATE.correctCount[key] = (STATE.correctCount[key]||0) + 1;
+        }else{
+          STATE.errorCount[key] = (STATE.errorCount[key]||0) + 1;
+        }
+      }
+
+      renderAll();
+      setTimeout(autoAdvance, 600);
+    });
+  });
+
+  // Cut buttons
+  document.querySelectorAll('.cut-btn').forEach(function(el){
+    el.addEventListener('click', function(e){
+      e.stopPropagation();
+      var qnum = parseInt(el.dataset.q);
+      var idx = STATE.cutQuestions.indexOf(qnum);
+      if(idx === -1){
+        STATE.cutQuestions.push(qnum);
+      }else{
+        STATE.cutQuestions.splice(idx, 1);
+      }
+      renderAll();
+    });
+  });
+
+  // Retry buttons
+  document.querySelectorAll('.retry-btn').forEach(function(el){
+    el.addEventListener('click', function(e){
+      e.stopPropagation();
+      var qnum = parseInt(el.dataset.q);
+      if(STATE.mode === 'exam'){
+        delete STATE.examAnswers[qnum];
+      }else{
+        delete STATE.answers[qnum];
+      }
+      renderAll();
+    });
+  });
+}
+
+function findQ(qnum){
+  var all = getAllQuestions();
+  for(var i=0; i<all.length; i++){ if(all[i].q === qnum) return all[i]; }
+  return null;
+}
+
+function autoAdvance(){
+  var qs = getActiveQuestions();
+  if(STATE.currentIndex < qs.length - 1){
+    STATE.currentIndex++;
     renderAll();
-    if(ok){setTimeout(function(){var qs=filterQs();if(S.idx<qs.length-1){S.idx++;renderAll()}},1000)}
-  })});
-  document.querySelectorAll('.cut').forEach(function(el){el.addEventListener('click',function(e){e.stopPropagation();var n=parseInt(el.dataset.q),i=S.cut.indexOf(n);if(i===-1)S.cut.push(n);else S.cut.splice(i,1);renderAll()})});
-  document.querySelectorAll('.retry').forEach(function(el){el.addEventListener('click',function(e){e.stopPropagation();var n=parseInt(el.dataset.q);if(S.mode==='exam')delete S.examAns[n];else delete S.answers[n];renderAll()})});
+  }
 }
 
-document.getElementById('prevBtn').addEventListener('click',function(){if(S.idx>0){S.idx--;renderAll()}});
-document.getElementById('nextBtn').addEventListener('click',function(){var qs=filterQs();if(S.idx<qs.length-1){S.idx++;renderAll()}});
-
-document.querySelectorAll('#modes button').forEach(function(b){b.addEventListener('click',function(){
-  var m=b.dataset.mode;if(m==='exam'){document.getElementById('examModal').classList.add('show');return}
-  S.mode=m;S.idx=0;S.filter=(m==='wrong')?'all':S.filter;renderAll()
-})});
-
-document.querySelectorAll('.subbar .filter button').forEach(function(b){b.addEventListener('click',function(){S.filter=b.dataset.filter;S.idx=0;renderAll()})});
-document.getElementById('clearBtn').addEventListener('click',function(){if(confirm('清空所有进度？')){S.answers={};S.errCount={};S.okCount={};S.cut=[];S.examHist=[];save();renderAll()}});
-
-document.getElementById('settingsBtn').addEventListener('click',function(){document.getElementById('drawer').classList.add('open');document.getElementById('mask').classList.add('show');renderCutList()});
-document.getElementById('mask').addEventListener('click',function(){document.getElementById('drawer').classList.remove('open');document.getElementById('mask').classList.remove('show')});
-
-function renderCutList(){
-  var h='';if(S.cut.length===0)h='<div style=\"color:#aaa;font-size:13px\">暂无</div>';
-  else S.cut.forEach(function(n){var q=findQ(n);h+='<div class=\"item\"><span>'+n+'. '+esc(q?q.text.substring(0,24):'')+'</span><button data-q=\"'+n+'\">恢复</button></div>'});
-  document.getElementById('cutList').innerHTML=h;
-  document.querySelectorAll('#cutList button').forEach(function(b){b.addEventListener('click',function(){var i=S.cut.indexOf(parseInt(b.dataset.q));if(i!==-1)S.cut.splice(i,1);renderCutList();renderAll()})});
-}
-document.getElementById('restoreAll').addEventListener('click',function(){S.cut=[];renderCutList();renderAll()});
-document.getElementById('submitExam').addEventListener('click',function(){if(confirm('交卷？'))finishExam()});
-
-document.addEventListener('keydown',function(e){
-  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();if(S.idx>0){S.idx--;renderAll()}}
-  else if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();var qs=filterQs();if(S.idx<qs.length-1){S.idx++;renderAll()}}
+// Navigation
+document.getElementById('prevBtn').addEventListener('click', function(){
+  if(STATE.currentIndex > 0){ STATE.currentIndex--; renderAll(); }
+});
+document.getElementById('nextBtn').addEventListener('click', function(){
+  var qs = getActiveQuestions();
+  if(STATE.currentIndex < qs.length - 1){ STATE.currentIndex++; renderAll(); }
 });
 
-var tx=0,ty=0;
-document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY});
-document.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50){var qs=filterQs();if(dx<0&&S.idx<qs.length-1){S.idx++;renderAll()}else if(dx>0&&S.idx>0){S.idx--;renderAll()}}});
+// Mode buttons
+document.querySelectorAll('#modes button').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var mode = btn.dataset.mode;
+    if(mode === 'exam'){
+      document.getElementById('examModal').classList.add('show');
+      return;
+    }
+    STATE.mode = mode;
+    STATE.currentIndex = 0;
+    STATE.filter = 'all';
+    renderAll();
+  });
+});
 
-function closeExamModal(){document.getElementById('examModal').classList.remove('show')}
+// Filter buttons
+document.querySelectorAll('.filter button[data-filter]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    STATE.filter = btn.dataset.filter;
+    STATE.currentIndex = 0;
+    renderAll();
+  });
+});
+
+// Clear
+document.getElementById('clearBtn').addEventListener('click', clearState);
+
+// Settings drawer
+document.getElementById('settingsBtn').addEventListener('click', function(){
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+  renderCutList();
+});
+document.getElementById('overlay').addEventListener('click', function(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+});
+
+function renderCutList(){
+  var html = '';
+  if(STATE.cutQuestions.length === 0){
+    html = '<div style=\"color:#999;font-size:13px\">暂无斩题</div>';
+  }else{
+    STATE.cutQuestions.forEach(function(qnum){
+      var q = findQ(qnum);
+      var text = q ? q.text.substring(0, 30) : '题' + qnum;
+      html += '<div class=\"cut-item\"><span>' + qnum + '. ' + esc(text) + '</span><button class=\"restore-btn\" data-q=\"' + qnum + '\">恢复</button></div>';
+    });
+  }
+  document.getElementById('cutList').innerHTML = html;
+  document.querySelectorAll('.restore-btn').forEach(function(b){
+    b.addEventListener('click', function(){
+      var idx = STATE.cutQuestions.indexOf(parseInt(b.dataset.q));
+      if(idx !== -1) STATE.cutQuestions.splice(idx, 1);
+      renderCutList();
+      renderAll();
+    });
+  });
+}
+
+document.getElementById('restoreAll').addEventListener('click', function(){
+  STATE.cutQuestions = [];
+  renderCutList();
+  renderAll();
+});
+
+// Submit exam
+document.getElementById('submitExam').addEventListener('click', function(){
+  if(confirm('确定交卷吗？')) finishExam();
+});
+
+// Keyboard
+document.addEventListener('keydown', function(e){
+  if(e.key === 'ArrowLeft' || e.key === 'ArrowUp'){
+    e.preventDefault();
+    if(STATE.currentIndex > 0){ STATE.currentIndex--; renderAll(); }
+  }else if(e.key === 'ArrowRight' || e.key === 'ArrowDown'){
+    e.preventDefault();
+    var qs = getActiveQuestions();
+    if(STATE.currentIndex < qs.length - 1){ STATE.currentIndex++; renderAll(); }
+  }
+});
+
+// Touch swipe
+var tx=0, ty=0;
+document.addEventListener('touchstart', function(e){ tx=e.touches[0].clientX; ty=e.touches[0].clientY; });
+document.addEventListener('touchend', function(e){
+  var dx=e.changedTouches[0].clientX-tx, dy=e.changedTouches[0].clientY-ty;
+  if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>50){
+    var qs=getActiveQuestions();
+    if(dx<0&&STATE.currentIndex<qs.length-1){STATE.currentIndex++;renderAll()}
+    else if(dx>0&&STATE.currentIndex>0){STATE.currentIndex--;renderAll()}
+  }
+});
+
+// ===== EXAM =====
+function closeExamModal(){ document.getElementById('examModal').classList.remove('show'); }
 function startExam(){
-  var total=parseInt(document.getElementById('examQCount').value)||0,tl=parseInt(document.getElementById('examTime').value)||0;closeExamModal();
-  var a=allQs(),ss=a.filter(function(q){return q.type==='single'}),ms=a.filter(function(q){return q.type==='multi'}),ts=a.filter(function(q){return q.type==='tf'});
-  var t=total||a.length,ns=Math.min(Math.round(t*.6),ss.length),nm=Math.min(Math.round(t*.3),ms.length),nt=Math.min(t-ns-nm,ts.length);
-  var eq=[];eq=eq.concat(shuffle(ss).slice(0,ns));eq=eq.concat(shuffle(ms).slice(0,nm));eq=eq.concat(shuffle(ts).slice(0,nt));eq=shuffle(eq);
-  S.mode='exam';S.examQs=eq;S.examAns={};S.examStart=Date.now();S.idx=0;S.filter='all';
-  document.getElementById('examTotal').textContent=eq.length;document.getElementById('examMax').textContent=calcMax();
-  if(tl>0&&S.examTimer)clearInterval(S.examTimer);
-  if(tl>0){var et=Date.now()+tl*60000;S.examTimer=setInterval(function(){var r=Math.max(0,Math.ceil((et-Date.now())/1000));var m=Math.floor(r/60),s=r%60;document.getElementById('examRemain').textContent=m+':'+(s<10?'0':'')+s;if(r<=0)finishExam()},1000);document.getElementById('examRemain').textContent=tl+':00'}else{document.getElementById('examRemain').textContent=eq.length}
+  var total = parseInt(document.getElementById('examQCount').value) || 0;
+  var timeLimit = parseInt(document.getElementById('examTime').value) || 0;
+  closeExamModal();
+
+  // Build exam question set
+  var all = getAllQuestions();
+  var singles = all.filter(function(q){ return q.type === 'single'; });
+  var multis = all.filter(function(q){ return q.type === 'multi'; });
+  var tfs = all.filter(function(q){ return q.type === 'tf'; });
+
+  var targetTotal = total || all.length;
+  // 60% single, 30% multi, 10% tf
+  var nSingle = Math.round(targetTotal * 0.6);
+  var nMulti = Math.round(targetTotal * 0.3);
+  var nTf = targetTotal - nSingle - nMulti;
+
+  // Ensure we don't exceed available
+  nSingle = Math.min(nSingle, singles.length);
+  nMulti = Math.min(nMulti, multis.length);
+  nTf = Math.min(nTf, tfs.length);
+
+  var examQs = [];
+  examQs = examQs.concat(shuffle(singles).slice(0, nSingle));
+  examQs = examQs.concat(shuffle(multis).slice(0, nMulti));
+  examQs = examQs.concat(shuffle(tfs).slice(0, nTf));
+  examQs = shuffle(examQs);
+
+  STATE.mode = 'exam';
+  STATE.examQuestions = examQs;
+  STATE.examAnswers = {};
+  STATE.examStartTime = Date.now();
+  STATE.currentIndex = 0;
+  STATE.filter = 'all';
+
+  document.getElementById('examTotal').textContent = examQs.length;
+  document.getElementById('examMax').textContent = calcMaxScore();
+
+  if(timeLimit > 0 && STATE.examTimer) clearInterval(STATE.examTimer);
+  if(timeLimit > 0){
+    var endTime = Date.now() + timeLimit * 60000;
+    STATE.examTimer = setInterval(function(){
+      var remain = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
+      document.getElementById('examRemain').textContent = Math.floor(remain/60) + ':' + (remain%60<10?'0':'') + (remain%60);
+      if(remain <= 0) finishExam();
+    }, 1000);
+    document.getElementById('examRemain').textContent = timeLimit + ':00';
+  }else{
+    document.getElementById('examRemain').textContent = examQs.length;
+  }
+
   renderAll();
 }
-function calcMax(){var t=0;S.examQs.forEach(function(q){t+=(q.type==='multi'?2:1)});return t}
-function finishExam(){
-  if(S.examTimer)clearInterval(S.examTimer);var cor=0,wro=0,sco=0,wqs=[];
-  S.examQs.forEach(function(q){var a=S.examAns[q.q];if(!a)return;if(a.correct){cor++;sco+=(q.type==='multi'?2:1)}else{wro++;wqs.push(q);S.errCount[q.q]=(S.errCount[q.q]||0)+1;S.answers[q.q]=a}});
-  var max=calcMax(),pct=max>0?Math.round(sco/max*100):0;
-  S.examHist.push({date:new Date().toISOString(),score:sco,maxScore:max,correct:cor,wrong:wro,pct:pct});
-  var m=document.getElementById('main'),r=document.getElementById('examResult'),h='<h2>'+(pct>=60?'🎉 通过':'💪 继续加油')+'</h2>';
-  h+='<div class=\"big\">'+sco+'<span>/'+max+'</span></div>';
-  h+='<div class=\"info\">正确率 '+pct+'% · 对 '+cor+' · 错 '+wro+'</div>';
-  if(wqs.length>0){h+='<div class=\"wrongs\"><b>错题：</b>';wqs.forEach(function(q){var a=S.examAns[q.q];h+='<div>'+q.q+'. '+esc(q.text.substring(0,50))+' <span style=\"color:#ef4444\">(选:'+(a?a.selected:'未答')+' 对:'+q.answer+')</span></div>'});h+='</div>'}
-  h+='<button style=\"margin-top:20px;padding:12px 28px;background:#111;color:#fff;border:none;border-radius:8px;font-size:14px;cursor:pointer\" onclick=\"exitExam()\">返回练习</button>';
-  m.innerHTML='';r.innerHTML=h;r.classList.add('show');document.getElementById('bottomNav').style.display='none';document.getElementById('examBar').classList.remove('show');save();
-}
-function exitExam(){S.mode='sequential';S.examQs=[];S.examAns={};if(S.examTimer)clearInterval(S.examTimer);document.getElementById('examResult').classList.remove('show');document.getElementById('examResult').innerHTML='';document.getElementById('bottomNav').style.display='flex';S.idx=0;renderAll()}
 
-document.getElementById('t').textContent=QUIZ_TITLE;
-load();renderAll();
+function calcMaxScore(){
+  var total = 0;
+  STATE.examQuestions.forEach(function(q){
+    if(q.type === 'multi') total += 2;
+    else total += 1; // single or tf = 1
+  });
+  return total;
+}
+
+function finishExam(){
+  if(STATE.examTimer) clearInterval(STATE.examTimer);
+
+  var total = STATE.examQuestions.length;
+  var answered = Object.keys(STATE.examAnswers).length;
+  var correct = 0;
+  var wrong = 0;
+  var score = 0;
+  var wrongQs = [];
+
+  STATE.examQuestions.forEach(function(q){
+    var ans = STATE.examAnswers[q.q];
+    if(!ans) return;
+    if(ans.correct){
+      correct++;
+      score += (q.type === 'multi') ? 2 : 1;
+    }else{
+      wrong++;
+      wrongQs.push(q);
+      // Record in error tracking
+      STATE.errorCount[q.q] = (STATE.errorCount[q.q]||0) + 1;
+      STATE.answers[q.q] = ans;
+    }
+  });
+
+  var maxScore = calcMaxScore();
+  var pct = maxScore > 0 ? Math.round(score/maxScore*100) : 0;
+
+  // Save exam history
+  STATE.examHistory.push({
+    date: new Date().toISOString(),
+    score: score,
+    maxScore: maxScore,
+    correct: correct,
+    wrong: wrong,
+    total: total,
+    pct: pct
+  });
+
+  // Render result
+  var main = document.getElementById('main');
+  var result = document.getElementById('examResult');
+  var html = '<h2>' + (pct >= 60 ? '🎉 通过' : '💪 继续加油') + '</h2>';
+  html += '<div class="score">' + score + '<span style="font-size:20px">/' + maxScore + '</span></div>';
+  html += '<div class="detail">';
+  html += '正确率：' + pct + '% &nbsp;|&nbsp; 答对：' + correct + ' &nbsp;|&nbsp; 答错：' + wrong + ' &nbsp;|&nbsp; 未答：' + (total-answered);
+  html += '</div>';
+
+  if(wrongQs.length > 0){
+    html += '<div class="wrong-list"><b>错题回顾：</b>';
+    wrongQs.forEach(function(q){
+      var ans = STATE.examAnswers[q.q];
+      html += '<div style="margin:8px 0;font-size:12px">';
+      html += '<b>' + q.q + '.</b> ' + esc(q.text.substring(0,60)) + '... ';
+      html += '<span style="color:#f44336">(选:' + (ans?ans.selected:'未答') + ' 正确:' + q.answer + ')</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  html += '<button style="margin-top:16px;padding:10px 24px;background:#1976d2;color:#fff;border:none;border-radius:6px;font-size:14px;cursor:pointer" onclick="exitExam()">返回练习</button>';
+
+  main.innerHTML = '';
+  result.innerHTML = html;
+  result.classList.add('show');
+  document.getElementById('bottomNav').style.display = 'none';
+  document.getElementById('examBar').classList.remove('show');
+
+  saveState();
+}
+
+function exitExam(){
+  STATE.mode = 'sequential';
+  STATE.examQuestions = [];
+  STATE.examAnswers = {};
+  if(STATE.examTimer) clearInterval(STATE.examTimer);
+  document.getElementById('examResult').classList.remove('show');
+  document.getElementById('examResult').innerHTML = '';
+  document.getElementById('bottomNav').style.display = 'flex';
+  STATE.currentIndex = 0;
+  renderAll();
+}
+
+// ===== INIT =====
+document.getElementById('quizTitle').textContent = QUIZ_TITLE;
+loadState();
+renderAll();
 </script>
 </body>
 </html>
