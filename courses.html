@@ -3,160 +3,260 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>巨量学 · 课程体系</title>
+<title>巨量学 · 课程讲义</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f9fa;color:#212529;min-height:100vh;padding:16px}
-h1{font-size:18px;text-align:center;margin:12px 0 20px}
-.back{font-size:13px;color:#666;text-decoration:none;display:inline-block;margin-bottom:12px}
-.wrap{max-width:700px;margin:0 auto}
-.mod{background:#fff;border-radius:14px;padding:18px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.04);border:1px solid #eee}
-.mod h3{font-size:16px;color:#7e22ce;margin-bottom:4px;cursor:pointer}
-.mod .dur{font-size:12px;color:#1976d2;font-weight:400}
-.mod .summary{font-size:13px;color:#555;margin:6px 0;line-height:1.6}
-.mod .points{margin-top:8px;display:none}
-.mod.open .points{display:block}
-.pt{font-size:12px;color:#444;padding:5px 0;border-bottom:1px solid #f5f5f5;line-height:1.6;display:flex;gap:6px}
-.pt .dot{color:#7e22ce;font-weight:700;flex-shrink:0}
-.tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
-.tag{font-size:11px;padding:3px 10px;background:#f3e8ff;color:#7e22ce;border-radius:10px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f9fa;color:#212529;min-height:100vh;padding:14px}
+h1{font-size:18px;text-align:center;margin:10px 0 16px}
+.back{font-size:13px;color:#666;text-decoration:none;display:inline-block;margin-bottom:10px}
+.w{max-width:700px;margin:0 auto}
+.mod{background:#fff;border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04);border:1px solid #eee}
+.mod h3{font-size:15px;color:#7e22ce;margin-bottom:4px;cursor:pointer}
+.mod .info{font-size:12px;color:#999;margin-bottom:8px}
+.mod .body{display:none}
+.mod.open .body{display:block}
+.lesson{background:#fafafa;border-radius:8px;padding:10px 14px;margin:8px 0}
+.lesson h4{font-size:13px;color:#333;margin-bottom:4px}
+.lesson .pts{font-size:12px;color:#555;line-height:1.8;list-style:none}
+.lesson .pts li::before{content:'· ';color:#7e22ce;font-weight:700}
 .footer{text-align:center;margin:30px 0;font-size:12px;color:#bbb}
 </style>
 </head>
 <body>
 
 <a class="back" href="index.html">← 返回首页</a>
-<h1>巨量学 · 数字营销效果信息流认证课程</h1>
-<p style="text-align:center;font-size:13px;color:#999;margin-bottom:20px">32节课 · 7小时 · 9大模块 · 点击模块展开知识点</p>
+<h1>巨量学 · 课程讲义（32节实录）</h1>
+<p style="text-align:center;font-size:12px;color:#999;margin-bottom:16px">基于 Whisper 转录 + MiMo 视觉分析 · 点击模块展开</p>
 
-<div class="wrap">
+<div class="w">
 
+<!-- 01 -->
 <div class="mod open" id="m01">
-<h3 onclick="this.parentElement.classList.toggle('open')">01 行业与平台基础 <span class="dur">~1.2h</span></h3>
-<div class="summary">理解巨量引擎平台架构、效果广告竞价原理和信息流广告生态</div>
-<div class="points">
-<div class="pt"><span class="dot">1</span>信息流广告是嵌入在内容流中的原生广告形式，2014年今日头条首次上线，现已覆盖资讯、视频、社交等场景</div>
-<div class="pt"><span class="dot">2</span>巨量引擎是字节跳动旗下综合营销服务平台，整合抖音、今日头条、西瓜视频、穿山甲等多产品流量</div>
-<div class="pt"><span class="dot">3</span>巨量引擎工作台提供四大能力：产品一站式、账户一站式、数据一站式、资金资产一站式</div>
-<div class="pt"><span class="dot">4</span>效果广告竞价核心：eCPM = 出价 × 预估CTR × 预估CVR × 1000，广告排序由eCPM决定</div>
-<div class="pt"><span class="dot">5</span>信息流广告投放形式：图片（大图/小图/组图）、视频、互动广告等，不同资源位支持不同样式</div>
-<div class="pt"><span class="dot">6</span>广告投放平台架构：广告主→广告组→广告计划→广告创意，四级结构逐层设置预算和定向</div>
-<div class="tags"><span class="tag">eCPM</span><span class="tag">原生广告</span><span class="tag">工作台</span><span class="tag">流量矩阵</span><span class="tag">竞价排序</span></div>
+<h3 onclick="this.parentElement.classList.toggle('open')">01 行业与平台基础 <span style="font-size:12px;color:#1976d2;font-weight:400">~1.2h</span></h3>
+<div class="info">5节课：行业洞察 · 平台概览 · 工作台介绍 · 效果广告原理 · 流量产品与创意样式</div>
+<div class="body">
+<div class="lesson"><h4>信息流广告行业发展洞察 (6min)</h4><ul class="pts">
+<li>信息流广告是嵌入内容流中原生广告形式，2014年今日头条首次上线</li>
+<li>中国数字广告市场从2007年至今持续高速增长，移动广告占比已超80%</li>
+<li>短视频/直播等内容形态推动信息流广告进入新阶段，用户时长持续增长</li>
+<li>AMC模型：认知(Awareness)→兴趣(Matching)→转化(Conversion)</li>
+</ul></div>
+<div class="lesson"><h4>巨量引擎营销服务平台·巨量广告 (10min)</h4><ul class="pts">
+<li>巨量广告聚合了抖音、今日头条、西瓜视频等产品流量</li>
+<li>四大优势：高度自动、极简创编、创意驱动、营销经营协同</li>
+<li>广告层级从三层(广告组-计划-创意)简化为两层(项目-广告)</li>
+<li>单账号项目上限200个，单项目下广告上限100个</li>
+<li>推广目的：应用推广、销售线索、电商商品、小程序、原生互动等</li>
+<li>巨量引擎APP支持手机端管理项目和广告、查看数据</li>
+</ul></div>
+<div class="lesson"><h4>巨量引擎工作台平台介绍 (9min)</h4><ul class="pts">
+<li>工作台是产品+营销+经营一站式门户，四大能力：产品/账户/数据/资金资产一站式</li>
+<li>工作台为不同用户角色提供不同使用界面（优化师/管理员/创意人员）</li>
+<li>多账户统一管理，同组织内素材共享</li>
+</ul></div>
+<div class="lesson"><h4>巨量引擎效果广告原理 (15min)</h4><ul class="pts">
+<li>eCPM=出价×预估CTR×预估CVR×1000，是广告排序的核心依据</li>
+<li>OCPM按曝光扣费，每千次价格=下一位eCPM+0.01</li>
+<li>冷启动：新计划需要积累20个转化才能度过学习期</li>
+<li>三要素：出价、素材点击率、落地页转化率共同决定竞争力</li>
+</ul></div>
+<div class="lesson"><h4>效果广告流量产品与创意样式 (14min)</h4><ul class="pts">
+<li>流量来源：抖音、今日头条、西瓜视频、穿山甲、番茄小说等</li>
+<li>广告样式：大图、小图、组图、视频、互动广告，不同资源位支持不同格式</li>
+<li>穿山甲是字节旗下广告联盟，覆盖超10万款APP</li>
+</ul></div>
 </div>
 </div>
 
+<!-- 02 -->
 <div class="mod" id="m02">
-<h3 onclick="this.parentElement.classList.toggle('open')">02 投放工具与产品 <span class="dur">~1.1h</span></h3>
-<div class="summary">掌握OCPM自动出价、智能放量、DMP人群管理和自动化投放工具</div>
-<div class="points">
-<div class="pt"><span class="dot">1</span>出价工具分两种：自动出价（OCPM）帮助花完预算找最低转化成本；手动出价由优化师自行控制</div>
-<div class="pt"><span class="dot">2</span>OCPM三种跑量方式：优先跑量、均衡投放、优先低成本。冷启动期系统充分探索优质流量</div>
-<div class="pt"><span class="dot">3</span>智能放量/系统推荐定向：初期优先找最可能点击转化的人群，度过冷启动后逐步放开定向</div>
-<div class="pt"><span class="dot">4</span>DMP/云图：支持投前分析为定向提供指导，投后分析生成人群包供前端投放使用</div>
-<div class="pt"><span class="dot">5</span>管家投放（半自动投放）：系统管理定向和调价，优化师专注素材创意，大幅提升投放效率</div>
-<div class="pt"><span class="dot">6</span>Marketing API：适用于有技术能力的广告主，批量管理提高人效，实时成本预算监控</div>
-<div class="pt"><span class="dot">7</span>UBX（新一代自动化投放平台）：支持全域投放、商品投放、直播投放三种模式</div>
-<div class="tags"><span class="tag">OCPM</span><span class="tag">冷启动</span><span class="tag">智能放量</span><span class="tag">DMP</span><span class="tag">管家投放</span><span class="tag">Marketing API</span><span class="tag">UBX</span></div>
+<h3 onclick="this.parentElement.classList.toggle('open')">02 投放工具与产品 <span style="font-size:12px;color:#1976d2;font-weight:400">~1.1h</span></h3>
+<div class="info">5节课：效果工具概念 · 工具概览 · 科学流量选择 · 自动化投放 · UBX平台</div>
+<div class="body">
+<div class="lesson"><h4>平台效果工具类产品概念 (8min) + 概览 (4min)</h4><ul class="pts">
+<li>出价工具：自动出价(OCPM)帮助花完预算找最低转化成本；手动出价自行控制</li>
+<li>自动出价三种跑量方式：优先跑量、均衡投放、优先低成本</li>
+<li>流量优选：系统推荐定向和智能放量，冷启动期优先找高转化人群</li>
+</ul></div>
+<div class="lesson"><h4>科学流量选择/定向类产品 (9min)</h4><ul class="pts">
+<li>定向维度：年龄、性别、地域、兴趣标签、行为兴趣、DMP人群包</li>
+<li>行为兴趣定向：支持7-15天、15-90天、180-365天等时段选择，不支持999天</li>
+<li>系统推荐定向初期优先找转化人群，度过冷启动后动态调整逐步放开</li>
+</ul></div>
+<div class="lesson"><h4>自动化投放 (11min)</h4><ul class="pts">
+<li>管家投放：半自动工具，系统管理定向和调价，优化师专注素材创意</li>
+<li>案例：某客户全托管账户单日50万+投放，成本达标</li>
+<li>Marketing API：批量管理、实时成本预算监控、快速归因，创建计划从2小时降至10分钟</li>
+</ul></div>
+<div class="lesson"><h4>UBX新一代自动化投放平台 (8min)</h4><ul class="pts">
+<li>UBX支持全域投放、商品投放、直播投放三种模式</li>
+<li>全域可拓展信息流推荐、直播广场等全域流量</li>
+<li>直播投放专门优化直播间场景的转化效果</li>
+</ul></div>
 </div>
 </div>
 
+<!-- 03 -->
 <div class="mod" id="m03">
-<h3 onclick="this.parentElement.classList.toggle('open')">03 账户搭建与创意 <span class="dur">~1.3h</span></h3>
-<div class="summary">学会搭建高效账户结构，掌握推广创意策划和落地页设计</div>
-<div class="points">
-<div class="pt"><span class="dot">1</span>账户结构：广告主→广告组→广告计划→广告创意，四级层级各自有预算、定向和状态设置</div>
-<div class="pt"><span class="dot">2</span>多账户管理：通过巨量引擎工作台统一管理多个广告账户，支持账户间素材共享和权限控制</div>
-<div class="pt"><span class="dot">3</span>广告组设置要点：推广目的（应用/销售线索/电商等）、预算类型（日预算/总预算）、投放时段</div>
-<div class="pt"><span class="dot">4</span>橙子建站：巨量引擎免费落地页制作工具，提供表单、电话、咨询、抽奖等组件，A/B测试功能</div>
-<div class="pt"><span class="dot">5</span>创意策划：动态词包根据用户兴趣实时替换广告文案关键词，提升点击率；程序化创意自动组合素材</div>
-<div class="pt"><span class="dot">6</span>落地页检测工具（橙子建站）：检测页面加载速度、转化流程、移动端适配，提供优化建议</div>
-<div class="pt"><span class="dot">7</span>素材与ID关系：一个素材（图片/视频ID）可被多个广告引用，素材ID = 内容 + 格式的唯一标识</div>
-<div class="tags"><span class="tag">账户结构</span><span class="tag">橙子建站</span><span class="tag">动态词包</span><span class="tag">程序化创意</span><span class="tag">落地页检测</span></div>
+<h3 onclick="this.parentElement.classList.toggle('open')">03 账户搭建与创意 <span style="font-size:12px;color:#1976d2;font-weight:400">~1.3h</span></h3>
+<div class="info">5节课：多账户管理 · 主创编流程 · 账户搭建技巧 · 创意策划 · 落地页设计</div>
+<div class="body">
+<div class="lesson"><h4>巨量广告多账户管理 (9min)</h4><ul class="pts">
+<li>工作台支持多账户统一管理、同组织内素材共享</li>
+<li>账户权限分为管理员、优化师、数据分析师等角色</li>
+</ul></div>
+<div class="lesson"><h4>主创编流程产品能力 (10min)</h4><ul class="pts">
+<li>项目-广告两级结构，转化目标/定向等在项目层级设置</li>
+<li>定向支持年龄、人群包、网络、手机品牌、运营商等维度</li>
+<li>批量操作：批量启用、更改时段、删除、更改定向等提高效率</li>
+<li>搜索广告启用项目成本稳投后，转化数据只在项目层级有</li>
+</ul></div>
+<div class="lesson"><h4>账户搭建关键技巧 (9min)</h4><ul class="pts">
+<li>新账户冷启动建议：小预算多计划、优质素材保持多样性、投放时段尽量拉长</li>
+<li>Nobid(最大转化)追求最低成本，会贴合大盘流量曲线做分时段预算分配</li>
+<li>一键起量仅支持冷启动期使用，结束后效果不会持续，可再次起量</li>
+</ul></div>
+<div class="lesson"><h4>推广创意策划撰写技巧 (24min)</h4><ul class="pts">
+<li>创意构思顺序：研究产品特点→确立目标用户→构思使用场景→生成文案方向</li>
+<li>动态词包根据用户兴趣实时替换广告文案，提升点击率</li>
+<li>程序化创意可自动组合多个素材和文案，系统优选最佳组合</li>
+<li>素材与ID关系：素材ID=内容+格式唯一标识，一个素材可被多个广告引用</li>
+<li>全量在线优选策略：上传素材→智能搭配→全量竞争→找最优组合</li>
+</ul></div>
+<div class="lesson"><h4>营销落地页设计与实操 (10min)</h4><ul class="pts">
+<li>橙子建站：免费落地页工具，支持表单、电话、咨询、抽奖等组件</li>
+<li>落地页检测：页面加载速度、转化流程、移动端适配</li>
+<li>落地页组件与转化目标联动：组件对应转化目标会在创编计划时自动带出</li>
+<li>微信客服加粉标准链路：展示→点击→落地页→添加企业微信</li>
+</ul></div>
 </div>
 </div>
 
+<!-- 04 -->
 <div class="mod" id="m04">
-<h3 onclick="this.parentElement.classList.toggle('open')">04 深度转化与线索 <span class="dur">~0.7h</span></h3>
-<div class="summary">精通深度转化目标配置、线索自动投放UBL和微信客服加粉全链路</div>
-<div class="points">
-<div class="pt"><span class="dot">1</span>深度转化：在浅层转化（点击/展示）基础上追踪更深层用户行为（付费/注册/留资），通过回传数据优化</div>
-<div class="pt"><span class="dot">2</span>线索自动投放UBL：系统自动完成定向、出价、创意优选，优化师只需设置预算和转化目标</div>
-<div class="pt"><span class="dot">3</span>微信客服加粉标准化链路：广告展示→点击→落地页→添加企业微信→客服沟通→转化</div>
-<div class="pt"><span class="dot">4</span>飞鱼CRM：线索管理工具，支持电脑端和移动端呼叫线索，记录跟进状态和转化结果</div>
-<div class="pt"><span class="dot">5</span>穿山甲：字节跳动旗下广告联盟，覆盖超过10万款APP，支持开屏、信息流、激励视频等广告形式</div>
-<div class="pt"><span class="dot">6</span>深度转化回传要求：日均回传>100个、有效率5%-95%、事件后7天内完成回传、保证稳定性</div>
-<div class="tags"><span class="tag">深度转化</span><span class="tag">UBL</span><span class="tag">微信客服加粉</span><span class="tag">飞鱼</span><span class="tag">穿山甲</span></div>
+<h3 onclick="this.parentElement.classList.toggle('open')">04 深度转化与线索 <span style="font-size:12px;color:#1976d2;font-weight:400">~0.7h</span></h3>
+<div class="info">3节课：深度转化入门 · 线索避坑案例 · 穿山甲广告资源</div>
+<div class="body">
+<div class="lesson"><h4>从0到1认识深度转化线索类 (12min)</h4><ul class="pts">
+<li>深度转化：追踪浅层之外更深行为(付费/注册/留资)，通过回传数据优化投放</li>
+<li>线索自动投放UBL：系统自动完成定向/出价/创意优选，优化师只需设预算和转化目标</li>
+<li>UBL一个广告项目最多支持上传30个标题、10个产品</li>
+<li>回传要求：日均>100个、有效率5%-95%、事件后7天内完成回传</li>
+<li>星链：将后端深转数据加密回传，数据波动/停投断传需提前告知</li>
+</ul></div>
+<div class="lesson"><h4>线索产品避坑/优秀案例详解 (6min)</h4><ul class="pts">
+<li>飞鱼CRM：支持电脑端和移动端呼叫线索、记录跟进状态</li>
+<li>微信客服加粉方案和落地页是"一对多"对应关系</li>
+<li>智能电话赔付标准：支持特定转化类目</li>
+</ul></div>
+<div class="lesson"><h4>穿山甲广告资源与投放优化 (18min)</h4><ul class="pts">
+<li>穿山甲覆盖超10万款APP，支持开屏/信息流/激励视频/插屏等广告形式</li>
+<li>每次付费出价产品主要优化付费成本和付费次数及ROI回收</li>
+<li>番茄小说竞价广告资源：章前信息流、章间信息流、文章底部Banner</li>
+</ul></div>
 </div>
 </div>
 
+<!-- 05 -->
 <div class="mod" id="m05">
-<h3 onclick="this.parentElement.classList.toggle('open')">05 客户营销与提案 <span class="dur">~0.6h</span></h3>
-<div class="summary">能够为客户制定专业的营销方案和高效提案</div>
-<div class="points">
-<div class="pt"><span class="dot">1</span>客户营销目标解析：从客户行业现状、竞争格局、商业模式、用户规模四个维度梳理客户需求</div>
-<div class="pt"><span class="dot">2</span>媒介分析：围绕媒体特性、媒体产品、媒体信息等维度深入分析，为策略制定提供依据</div>
-<div class="pt"><span class="dot">3</span>提案框架：团队介绍→行业洞察→策略规划→执行方案→效果预估→商务条款</div>
-<div class="pt"><span class="dot">4</span>团队历史合作呈现：重点列举广告主所在行业TOP客户，展示合作年限、业务额、满意度</div>
-<div class="pt"><span class="dot">5</span>客户关系维护：用同理心建立情感联结、及时响应需求调整、对结果全程关注和同步</div>
-<div class="tags"><span class="tag">客户洞察</span><span class="tag">媒介分析</span><span class="tag">提案框架</span><span class="tag">客户维护</span></div>
+<h3 onclick="this.parentElement.classList.toggle('open')">05 客户营销与提案 <span style="font-size:12px;color:#1976d2;font-weight:400">~0.6h</span></h3>
+<div class="info">2节课：客户营销目标洞察 · 高效提案策划</div>
+<div class="body">
+<div class="lesson"><h4>客户营销目标解析洞察 (9min)</h4><ul class="pts">
+<li>客户梳理四个维度：竞争格局、市场结构、商业模式、用户规模</li>
+<li>媒介分析：围绕媒体特性、产品、信息等维度深入分析，为策略提供依据</li>
+<li>团队历史合作呈现：重点列举行业TOP客户合作情况，不限行业越多越好是错误的做法</li>
+</ul></div>
+<div class="lesson"><h4>高效提案策划与呈现秘籍 (12min)</h4><ul class="pts">
+<li>提案框架：客户需求分析→策略规划→执行方案→效果预估→商务安排</li>
+<li>客户关系维护：运用同理心建立情感联结，每一步让客户感受用心与细致</li>
+<li>接到客户需求或异议时应负责到底，过程中出现交接也需关注结果及时回复</li>
+<li>当客户有异议时应快速反应并调整，效果达到预期后再与客户同步（不能只调整不沟通）</li>
+</ul></div>
 </div>
 </div>
 
+<!-- 06 -->
 <div class="mod" id="m06">
-<h3 onclick="this.parentElement.classList.toggle('open')">06 合规与审核 <span class="dur">~1.3h</span></h3>
-<div class="summary">确保广告投放合法合规，规避审核风险</div>
-<div class="points">
-<div class="pt"><span class="dot">1</span>互联网广告法核心：广告应当真实合法、不得虚假误导、特殊行业（医疗/金融等）需资质审核</div>
-<div class="pt"><span class="dot">2</span>广告审核通用规则：素材不得含色情暴力、不得侵权、不得使用绝对化用语、需有显著关闭标识</div>
-<div class="pt"><span class="dot">3</span>巨量引擎广告规范：开户需企业资质、行业准入限制（部分类目禁投）、落地页合规检查</div>
-<div class="pt"><span class="dot">4</span>隐私合规：APP未告知用户权限使用目的/范围属于违规，数据收集需用户授权</div>
-<div class="pt"><span class="dot">5</span>常见违规：虚假宣传、夸大效果、诱导点击、落地页与广告内容不符、盗用他人素材</div>
-<div class="tags"><span class="tag">广告法</span><span class="tag">审核规则</span><span class="tag">资质审核</span><span class="tag">隐私合规</span><span class="tag">违规类型</span></div>
+<h3 onclick="this.parentElement.classList.toggle('open')">06 合规与审核 <span style="font-size:12px;color:#1976d2;font-weight:400">~1.3h</span></h3>
+<div class="info">3节课：广告风险意识 · 审核通用规则 · 巨量广告规范</div>
+<div class="body">
+<div class="lesson"><h4>互联网广告风险意识 (25min)</h4><ul class="pts">
+<li>广告法的核心要求：广告真实合法、不得虚假误导、特殊行业需资质审核</li>
+<li>隐私合规：APP未告知用户权限使用目的/范围属于违规收集</li>
+<li>常见违规类型：虚假宣传、夸大效果、诱导点击、落地页不符、盗用素材</li>
+</ul></div>
+<div class="lesson"><h4>互联网广告审核通用规则 (23min)</h4><ul class="pts">
+<li>素材不得含色情暴力内容、不得侵权、不得使用绝对化用语</li>
+<li>广告需有显著关闭标识，落地页必须与广告内容一致</li>
+<li>信息流广告形式包括：图片、信息流大图、视频、图文，其中"信息流大图"是信息流广告形式</li>
+</ul></div>
+<div class="lesson"><h4>巨量引擎广告规范解读 (15min)</h4><ul class="pts">
+<li>开户需企业资质、行业准入限制（部分类目禁投）</li>
+<li>橙子建站落地页也需通过审核，确保内容与广告一致</li>
+</ul></div>
 </div>
 </div>
 
+<!-- 07 -->
 <div class="mod" id="m07">
-<h3 onclick="this.parentElement.classList.toggle('open')">07 数据分析 <span class="dur">~0.3h</span></h3>
-<div class="summary">掌握投放数据指标体系，通过数据分析优化投放效果</div>
-<div class="points">
-<div class="pt"><span class="dot">1</span>CPM（千次展示成本）= 消耗/展示数×1000；CPC（每次点击成本）= 消耗/点击数</div>
-<div class="pt"><span class="dot">2</span>CTR（点击率）= 点击数/展示数；CVR（转化率）= 转化数/点击数</div>
-<div class="pt"><span class="dot">3</span>OCPM计费：按曝光（展示）扣费，不是按点击或转化。每千次展示价格 = 下一位eCPM + 0.01</div>
-<div class="pt"><span class="dot">4</span>转化漏斗：展示→点击→落地页访问→落地页内转化→线索转化，每层都有流失</div>
-<div class="pt"><span class="dot">5</span>自定义报表：支持查看当日分时数据、对比历史数据、交叉分析（年龄×城市×性别等维度）</div>
-<div class="pt"><span class="dot">6</span>广告计划消耗过少原因：人群定向过窄、出价偏低、预算不足、素材质量差、竞争环境变化</div>
-<div class="tags"><span class="tag">CPM</span><span class="tag">CTR</span><span class="tag">CVR</span><span class="tag">转化漏斗</span><span class="tag">报表</span></div>
+<h3 onclick="this.parentElement.classList.toggle('open')">07 数据分析 <span style="font-size:12px;color:#1976d2;font-weight:400">~0.3h</span></h3>
+<div class="info">1节课：投放数据指标洞察解析</div>
+<div class="body">
+<div class="lesson"><h4>投放数据指标洞察解析 (20min)</h4><ul class="pts">
+<li>CPM(千次展示成本)=消耗/展示数×1000；CPC=消耗/点击数</li>
+<li>CTR(点击率)=点击数/展示数；CVR(转化率)=转化数/点击数</li>
+<li>转化漏斗：展示→点击→落地页访问→落地页内转化→线索转化</li>
+<li>自定义报表支持查看当日分时数据、对比历史数据</li>
+<li>数据源每天更新次数限制为100次</li>
+<li>人群细分分析可用维度：年龄、城市级别、性别、消费水平</li>
+<li>计划消耗过少原因：人群定向过窄、出价偏低、预算不足、素材质量差</li>
+</ul></div>
 </div>
 </div>
 
+<!-- 08 -->
 <div class="mod" id="m08">
-<h3 onclick="this.parentElement.classList.toggle('open')">08 职业素养 <span class="dur">~1.2h</span></h3>
-<div class="summary">培养专业的职业素养和工作效率方法</div>
-<div class="points">
-<div class="pt"><span class="dot">1</span>时间管理四象限：紧急重要→立刻做；重要不紧急→计划做；紧急不重要→授权做；不紧急不重要→不做</div>
-<div class="pt"><span class="dot">2</span>高效沟通关键点：积极回应、减少打断式提问、共同探讨而非单向灌输、控制情绪保持客观</div>
-<div class="pt"><span class="dot">3</span>沟通常见错误：以自我为中心、偏离主题、态度暧昧、情绪失控。正确做法是先理解再表达</div>
-<div class="pt"><span class="dot">4</span>客户异议处理：快速反应做出调整，但效果达标后再同步（不能只调整不沟通结果）</div>
-<div class="pt"><span class="dot">5</span>投射效应在销售中的应用：第一次见客户认真整理材料、正式着装，利用专业形象获取认同</div>
-<div class="tags"><span class="tag">时间管理</span><span class="tag">沟通技巧</span><span class="tag">客户关系</span><span class="tag">Excel</span></div>
+<h3 onclick="this.parentElement.classList.toggle('open')">08 职业素养 <span style="font-size:12px;color:#1976d2;font-weight:400">~1.2h</span></h3>
+<div class="info">4节课：职业规划 · 时间管理 · 沟通技巧 · Excel技能</div>
+<div class="body">
+<div class="lesson"><h4>营销师职业发展规划 (22min)</h4><ul class="pts">
+<li>信息流优化师核心能力：数据分析、素材创意、账户管理、客户沟通</li>
+<li>职业发展路径：初级优化师→高级优化师→优化主管→营销总监</li>
+</ul></div>
+<div class="lesson"><h4>高效率工作管理·时间工具 (18min)</h4><ul class="pts">
+<li>时间管理四象限：紧急重要(立刻做)、重要不紧急(计划做)、紧急不重要(授权做)、不紧急不重要(不做)</li>
+<li>设置待办事项清单首先要做的是：写下来明显重要的事情</li>
+<li>朋友发微信闲聊属于"不紧急不重要"的事</li>
+</ul></div>
+<div class="lesson"><h4>高效率工作管理·沟通技巧 (30min)</h4><ul class="pts">
+<li>高效沟通关键点：积极回应、减少提问、共同探讨（不是客户至上）</li>
+<li>沟通常见错误：以自我为中心、偏离主题、态度暧昧。控制情绪不属于错误</li>
+<li>发现分歧导致对方有负面情绪，首先要放弃沟通内容、维护沟通氛围</li>
+<li>投射效应：第一次见客户正式着装、认真整理材料，用专业形象获取认同</li>
+</ul></div>
+<div class="lesson"><h4>Excel实用技能秘籍 (16min)</h4><ul class="pts">
+<li>数据透视表、VLOOKUP、条件格式等常用功能</li>
+<li>巨量引擎报表导出后可用Excel进行二次分析和可视化</li>
+</ul></div>
 </div>
 </div>
 
+<!-- 09 -->
 <div class="mod" id="m09">
-<h3 onclick="this.parentElement.classList.toggle('open')">09 考试与结业 <span class="dur">~0.1h</span></h3>
-<div class="summary">了解认证考试流程和备考策略</div>
-<div class="points">
-<div class="pt"><span class="dot">1</span>认证考试为在线机考，题型包括单选题（~60%）、多选题（~30%）、判断题（~10%）</div>
-<div class="pt"><span class="dot">2</span>考试范围覆盖全部9个模块，重点在01-04模块（行业基础、投放工具、账户搭建、深度转化）</div>
-<div class="pt"><span class="dot">3</span>建议学习路线：基础认知→平台操作→投放进阶→创意落地页→客户提案→合规数据→职业素养</div>
-<div class="pt"><span class="dot">4</span>通过标准：满分约500分，建议刷题量>500道，错题反复练习至正确率>80%</div>
-<div class="tags"><span class="tag">考试大纲</span><span class="tag">题型分布</span><span class="tag">学习路线</span></div>
+<h3 onclick="this.parentElement.classList.toggle('open')">09 考试与结业 <span style="font-size:12px;color:#1976d2;font-weight:400">~0.1h</span></h3>
+<div class="info">1节课：认证考试指引</div>
+<div class="body">
+<div class="lesson"><h4>系列课程介绍/认证考试指引 (5min)</h4><ul class="pts">
+<li>课程覆盖巨量引擎数字营销效果信息流认证全部知识点</li>
+<li>认证分为理论和实操两部分，理论考试为在线机考</li>
+<li>建议按学习路线：基础→平台→投放→创意→客户→合规→数据→素养</li>
+</ul></div>
 </div>
 </div>
 
 </div>
 
-<div class="footer">32节课 · 7小时 · 9大模块 · 覆盖认证全部知识点</div>
-
+<div class="footer">32节课实录 · 基于Whisper转录 + MiMo视觉分析 · 总时长7.0小时</div>
 </body>
 </html>
