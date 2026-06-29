@@ -114,7 +114,38 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .exam-rst .wrongs div{margin:6px 0;line-height:1.5}
 </style>
 </head>
-<body>
+<body style="overflow:hidden">
+
+<!-- AUTH OVERLAY -->
+<div id="authOverlay" style="position:fixed;inset:0;background:#f8f9fa;z-index:999;display:flex;align-items:center;justify-content:center;padding:20px">
+<div style="width:100%;max-width:340px">
+  <div style="text-align:center;margin-bottom:30px">
+    <div style="font-size:40px;margin-bottom:8px">🔐</div>
+    <h2 style="font-size:18px;font-weight:700">信息流广告营销师题库</h2>
+    <p style="font-size:12px;color:#999;margin-top:4px" id="authTitle">登录或注册进入</p>
+  </div>
+  <!-- Tabs -->
+  <div style="display:flex;gap:0;margin-bottom:20px">
+    <button id="tabLogin" style="flex:1;padding:10px;border:none;background:#212529;color:#fff;border-radius:8px 0 0 8px;font-size:14px;cursor:pointer" onclick="switchAuthTab('login')">登录</button>
+    <button id="tabRegister" style="flex:1;padding:10px;border:none;background:#e5e7eb;color:#666;border-radius:0 8px 8px 0;font-size:14px;cursor:pointer" onclick="switchAuthTab('register')">注册</button>
+  </div>
+  <!-- Login Form -->
+  <div id="formLogin">
+    <input id="loginKey" placeholder="输入你的密钥" style="width:100%;padding:14px;border:1px solid #e5e7eb;border-radius:10px;font-size:15px;margin-bottom:12px">
+    <button onclick="doLogin()" style="width:100%;padding:14px;background:#212529;color:#fff;border:none;border-radius:10px;font-size:15px;cursor:pointer">进入</button>
+    <p id="loginError" style="font-size:12px;color:#ef4444;margin-top:8px;display:none"></p>
+  </div>
+  <!-- Register Form -->
+  <div id="formRegister" style="display:none">
+    <input id="regCode" placeholder="输入邀请码" style="width:100%;padding:14px;border:1px solid #e5e7eb;border-radius:10px;font-size:15px;margin-bottom:12px">
+    <input id="regKey" placeholder="设置你的密钥（登录用）" style="width:100%;padding:14px;border:1px solid #e5e7eb;border-radius:10px;font-size:15px;margin-bottom:12px">
+    <button onclick="doRegister()" style="width:100%;padding:14px;background:#7e22ce;color:#fff;border:none;border-radius:10px;font-size:15px;cursor:pointer">注册</button>
+    <p id="regError" style="font-size:12px;color:#ef4444;margin-top:8px;display:none"></p>
+  </div>
+  <p style="text-align:center;font-size:11px;color:#ccc;margin-top:20px" id="existingUsers"></p>
+</div></div>
+
+<div id="appContent" style="display:none">
 
 <div class="topbar">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
@@ -174,14 +205,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- Countdown badge -->
 <div id="cdBadge" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.85);color:#fff;font-size:48px;width:80px;height:80px;border-radius:50%;z-index:300;align-items:center;justify-content:center;font-weight:700;pointer-events:none"></div>
 
-<!-- Login -->
-<div class="modal show" id="loginModal" style="z-index:400">
-<div class="box"><h3>输入密钥</h3>
-<input id="loginInput" placeholder="输入你的密钥（任意字符）" style="width:100%;padding:12px;margin:8px 0;border:1px solid #e5e7eb;border-radius:8px;font-size:14px">
-<p id="loginHint" style="font-size:11px;color:#999"></p>
-<div class="btns"><button class="b-ok" onclick="login(document.getElementById('loginInput').value)" style="width:100%">进入</button></div>
-</div></div>
-
 <!-- QNav -->
 <div class="modal" id="qnavModal" style="z-index:250">
 <div class="box" style="max-width:380px;max-height:80vh;overflow-y:auto">
@@ -211,7 +234,8 @@ var QUIZ_ID = 'v2';
 var QUIZ_TITLE = '真题库 224题';
 var COURSE_CONCEPTS = {"01": {"name": "行业与平台基础", "concepts": ["巨量引擎营销服务平台", "效果广告竞价原理", "eCPM排序机制", "信息流广告形式", "流量产品矩阵", "创意样式规范"], "key": "理解巨量引擎平台架构和广告竞价原理"}, "02": {"name": "投放工具与产品", "concepts": ["OCPM自动出价", "智能放量/系统推荐", "DMP人群管理", "管家投放", "Marketing API", "云图数据平台", "UBX自动化投放"], "key": "掌握各类投放工具的使用场景和优化方法"}, "03": {"name": "账户搭建与创意", "concepts": ["多账户管理体系", "广告组-计划-创意层级", "橙子建站落地页", "动态词包", "程序化创意", "素材审核标准", "账户结构优化"], "key": "学会搭建高效账户结构并制作优质创意"}, "04": {"name": "深度转化与线索", "concepts": ["深度转化目标", "线索自动投放UBL", "微信客服加粉链路", "飞鱼CRM", "穿山甲广告资源", "企业微信转化", "表单提交优化"], "key": "精通深度转化和线索类产品的投放技巧"}, "05": {"name": "客户营销与提案", "concepts": ["客户营销目标解析", "行业竞品分析", "媒介策略制定", "提案策划框架", "客户关系维护", "差异化价值呈现"], "key": "能够为客户制定专业的营销方案"}, "06": {"name": "合规与审核", "concepts": ["广告法合规要求", "互联网广告审核规则", "行业禁投类目", "素材审核标准", "隐私数据保护", "风险防范机制"], "key": "确保广告投放合法合规"}, "07": {"name": "数据分析", "concepts": ["CPM/CPC/CPA指标", "CTR/CVR转化率", "ROI计算", "自定义报表", "分时数据分析", "数据源管理", "归因分析"], "key": "能够通过数据分析优化投放效果"}, "08": {"name": "职业素养", "concepts": ["时间管理四象限", "高效沟通技巧", "倾听与回应", "Excel数据分析", "职业发展规划", "工作效率工具"], "key": "培养专业的职业素养和工作习惯"}, "09": {"name": "考试与结业", "concepts": ["认证考试流程", "考试题型分布", "备考策略", "认证证书获取"], "key": "顺利通过信息流广告营销师认证考试"}};
 var USER_KEY = '';
-var COUNTDOWN = null; // countdown timer ref
+var COUNTDOWN = null;
+var VALID_CODES = ['JL2026','jL2026','JULIANG2026','广告营销师','888888'];
 
 var S = {
   mode: 'sequential', idx: 0, filter: 'all',
@@ -230,18 +254,45 @@ function save(){
   if(!USER_KEY) return;
   try{localStorage.setItem(sk(),JSON.stringify({mode:S.mode,answers:S.answers,errCount:S.errCount,okCount:S.okCount,cut:S.cut,examHist:S.examHist}))}catch(e){}
 }
-function login(key){
-  key=(key||'').trim(); if(!key) return;
+function switchAuthTab(t){
+  document.getElementById('tabLogin').style.background=t==='login'?'#212529':'#e5e7eb';
+  document.getElementById('tabLogin').style.color=t==='login'?'#fff':'#666';
+  document.getElementById('tabRegister').style.background=t==='register'?'#7e22ce':'#e5e7eb';
+  document.getElementById('tabRegister').style.color=t==='register'?'#fff':'#666';
+  document.getElementById('formLogin').style.display=t==='login'?'block':'none';
+  document.getElementById('formRegister').style.display=t==='register'?'block':'none';
+  document.getElementById('authTitle').textContent=t==='login'?'登录进入题库':'注册新用户';
+  document.getElementById('loginError').style.display='none';
+  document.getElementById('regError').style.display='none';
+}
+function doLogin(){
+  var k=document.getElementById('loginKey').value.trim();
+  if(!k){ document.getElementById('loginError').textContent='请输入密钥';document.getElementById('loginError').style.display='block';return }
+  if(!localStorage.getItem(sk())){ document.getElementById('loginError').textContent='密钥不存在，请先注册';document.getElementById('loginError').style.display='block';return }
+  enterQuiz(k);
+}
+function doRegister(){
+  var code=document.getElementById('regCode').value.trim();
+  var k=document.getElementById('regKey').value.trim();
+  if(!code){ document.getElementById('regError').textContent='请输入邀请码';document.getElementById('regError').style.display='block';return }
+  if(!k){ document.getElementById('regError').textContent='请设置密钥';document.getElementById('regError').style.display='block';return }
+  if(!VALID_CODES.includes(code)){ document.getElementById('regError').textContent='邀请码无效';document.getElementById('regError').style.display='block';return }
+  if(localStorage.getItem(sk())){ document.getElementById('regError').textContent='密钥已存在，请直接登录';document.getElementById('regError').style.display='block';return }
+  enterQuiz(k);
+}
+function enterQuiz(key){
   USER_KEY=key; load(); renderAll();
-  document.getElementById('loginModal').classList.remove('show');
+  document.getElementById('authOverlay').style.display='none';
+  document.getElementById('appContent').style.display='block';
+  document.body.style.overflow='';
   document.getElementById('userLabel').textContent=key;
 }
 function switchUser(){
-  document.getElementById('loginModal').classList.add('show');
-  document.getElementById('loginInput').value=''; document.getElementById('loginInput').focus();
-}
-function hasUserData(key){
-  try{ return !!localStorage.getItem('qz_'+QUIZ_ID+'_'+key); }catch(e){ return false; }
+  document.getElementById('authOverlay').style.display='flex';
+  document.getElementById('appContent').style.display='none';
+  document.body.style.overflow='hidden';
+  document.getElementById('loginKey').value='';document.getElementById('loginError').style.display='none';
+  listExistingUsers();
 }
 
 function allQs(){ return QUESTIONS.slice(); }
@@ -432,17 +483,18 @@ function finishExam(){
 function exitExam(){S.mode='sequential';S.examQs=[];S.examAns={};if(S.examTimer)clearInterval(S.examTimer);document.getElementById('examResult').classList.remove('show');document.getElementById('examResult').innerHTML='';document.getElementById('bottomNav').style.display='flex';S.idx=0;renderAll()}
 
 document.getElementById('t').textContent=QUIZ_TITLE;
-// Check for existing users and show login
-(function initLogin(){
+function listExistingUsers(){
   var keys=[];
   try{ for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);var m=k.match(new RegExp('^qz_'+QUIZ_ID+'_(.+)$'));if(m)keys.push(m[1])} }catch(e){}
-  if(keys.length>0){
-    var hint=document.getElementById('loginHint');
-    hint.textContent='已有密钥：'+keys.join('、')+'（输入任意密钥进入）';
-  }
-  document.getElementById('loginInput').addEventListener('keydown',function(e){if(e.key==='Enter')login(this.value)});
-  document.getElementById('loginInput').focus();
-})();
+  var el=document.getElementById('existingUsers');
+  el.textContent=keys.length>0?'已有用户：'+keys.join('、'):'';
+}
+listExistingUsers();
+document.getElementById('loginKey').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin()});
+document.getElementById('regCode').addEventListener('keydown',function(e){if(e.key==='Enter')doRegister()});
+document.getElementById('regKey').addEventListener('keydown',function(e){if(e.key==='Enter')doRegister()});
+document.getElementById('loginKey').focus();
 </script>
+</div><!-- end appContent -->
 </body>
 </html>
