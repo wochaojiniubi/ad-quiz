@@ -120,7 +120,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
     <a class="home" href="index.html">← 首页</a>
     <h1 id="t">题库</h1>
-    <span style="width:40px"></span>
+    <span style="width:40px;font-size:11px;color:#1976d2;cursor:pointer" id="userLabel" onclick="switchUser()"></span>
   </div>
   <div class="row">
     <span>进度 <b id="an">0</b>/<b id="tn">0</b></span>
@@ -171,6 +171,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <button style="margin-top:14px;width:100%;padding:10px;background:#ef4444;color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer" id="restoreAll">恢复全部</button>
 </div>
 
+<!-- Countdown badge -->
+<div id="cdBadge" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.85);color:#fff;font-size:48px;width:80px;height:80px;border-radius:50%;z-index:300;align-items:center;justify-content:center;font-weight:700;pointer-events:none"></div>
+
+<!-- Login -->
+<div class="modal show" id="loginModal" style="z-index:400">
+<div class="box"><h3>输入密钥</h3>
+<input id="loginInput" placeholder="输入你的密钥（任意字符）" style="width:100%;padding:12px;margin:8px 0;border:1px solid #e5e7eb;border-radius:8px;font-size:14px">
+<p id="loginHint" style="font-size:11px;color:#999"></p>
+<div class="btns"><button class="b-ok" onclick="login(document.getElementById('loginInput').value)" style="width:100%">进入</button></div>
+</div></div>
+
 <!-- QNav -->
 <div class="modal" id="qnavModal" style="z-index:250">
 <div class="box" style="max-width:380px;max-height:80vh;overflow-y:auto">
@@ -199,7 +210,8 @@ var QUESTIONS = [{"q": 1, "text": "目前，巨量引擎广告投放平台中不
 var QUIZ_ID = 'v2';
 var QUIZ_TITLE = '真题库 224题';
 var COURSE_CONCEPTS = {"01": {"name": "行业与平台基础", "concepts": ["巨量引擎营销服务平台", "效果广告竞价原理", "eCPM排序机制", "信息流广告形式", "流量产品矩阵", "创意样式规范"], "key": "理解巨量引擎平台架构和广告竞价原理"}, "02": {"name": "投放工具与产品", "concepts": ["OCPM自动出价", "智能放量/系统推荐", "DMP人群管理", "管家投放", "Marketing API", "云图数据平台", "UBX自动化投放"], "key": "掌握各类投放工具的使用场景和优化方法"}, "03": {"name": "账户搭建与创意", "concepts": ["多账户管理体系", "广告组-计划-创意层级", "橙子建站落地页", "动态词包", "程序化创意", "素材审核标准", "账户结构优化"], "key": "学会搭建高效账户结构并制作优质创意"}, "04": {"name": "深度转化与线索", "concepts": ["深度转化目标", "线索自动投放UBL", "微信客服加粉链路", "飞鱼CRM", "穿山甲广告资源", "企业微信转化", "表单提交优化"], "key": "精通深度转化和线索类产品的投放技巧"}, "05": {"name": "客户营销与提案", "concepts": ["客户营销目标解析", "行业竞品分析", "媒介策略制定", "提案策划框架", "客户关系维护", "差异化价值呈现"], "key": "能够为客户制定专业的营销方案"}, "06": {"name": "合规与审核", "concepts": ["广告法合规要求", "互联网广告审核规则", "行业禁投类目", "素材审核标准", "隐私数据保护", "风险防范机制"], "key": "确保广告投放合法合规"}, "07": {"name": "数据分析", "concepts": ["CPM/CPC/CPA指标", "CTR/CVR转化率", "ROI计算", "自定义报表", "分时数据分析", "数据源管理", "归因分析"], "key": "能够通过数据分析优化投放效果"}, "08": {"name": "职业素养", "concepts": ["时间管理四象限", "高效沟通技巧", "倾听与回应", "Excel数据分析", "职业发展规划", "工作效率工具"], "key": "培养专业的职业素养和工作习惯"}, "09": {"name": "考试与结业", "concepts": ["认证考试流程", "考试题型分布", "备考策略", "认证证书获取"], "key": "顺利通过信息流广告营销师认证考试"}};
-var STORE_KEY = 'qz_' + QUIZ_ID;
+var USER_KEY = '';
+var COUNTDOWN = null; // countdown timer ref
 
 var S = {
   mode: 'sequential', idx: 0, filter: 'all',
@@ -207,13 +219,29 @@ var S = {
   examQs: [], examAns: {}, examStart: 0, examTimer: null, examHist: []
 };
 
+function sk(){ return 'qz_'+QUIZ_ID+'_'+USER_KEY; }
 function load(){
-  try{var r=localStorage.getItem(STORE_KEY);if(r){var s=JSON.parse(r);
+  if(!USER_KEY) return;
+  try{var r=localStorage.getItem(sk());if(r){var s=JSON.parse(r);
   S.mode=s.mode||'sequential';S.answers=s.answers||{};S.errCount=s.errCount||{};
   S.okCount=s.okCount||{};S.cut=s.cut||[];S.examHist=s.examHist||[]}}catch(e){}
 }
 function save(){
-  try{localStorage.setItem(STORE_KEY,JSON.stringify({mode:S.mode,answers:S.answers,errCount:S.errCount,okCount:S.okCount,cut:S.cut,examHist:S.examHist}))}catch(e){}
+  if(!USER_KEY) return;
+  try{localStorage.setItem(sk(),JSON.stringify({mode:S.mode,answers:S.answers,errCount:S.errCount,okCount:S.okCount,cut:S.cut,examHist:S.examHist}))}catch(e){}
+}
+function login(key){
+  key=(key||'').trim(); if(!key) return;
+  USER_KEY=key; load(); renderAll();
+  document.getElementById('loginModal').classList.remove('show');
+  document.getElementById('userLabel').textContent=key;
+}
+function switchUser(){
+  document.getElementById('loginModal').classList.add('show');
+  document.getElementById('loginInput').value=''; document.getElementById('loginInput').focus();
+}
+function hasUserData(key){
+  try{ return !!localStorage.getItem('qz_'+QUIZ_ID+'_'+key); }catch(e){ return false; }
 }
 
 function allQs(){ return QUESTIONS.slice(); }
@@ -312,14 +340,28 @@ function bindEvts(){
     if(S.mode==='exam'){S.examAns[n]={selected:l,correct:ok,time:Date.now()}}
     else{S.answers[n]={selected:l,correct:ok,time:Date.now()};if(ok){S.okCount[n]=(S.okCount[n]||0)+1}else{S.errCount[n]=(S.errCount[n]||0)+1}}
     renderAll();
-    if(ok){setTimeout(function(){var qs=filterQs();if(S.idx<qs.length-1){S.idx++;renderAll()}},1000)}
+    if(ok){startCountdown()}else{cancelCountdown()}
   })});
   document.querySelectorAll('.cut').forEach(function(el){el.addEventListener('click',function(e){e.stopPropagation();var n=parseInt(el.dataset.q),i=S.cut.indexOf(n);if(i===-1){S.cut.push(n);delete S.errCount[n]}else{S.cut.splice(i,1)};renderAll()})});
   document.querySelectorAll('.retry').forEach(function(el){el.addEventListener('click',function(e){e.stopPropagation();var n=parseInt(el.dataset.q);if(S.mode==='exam')delete S.examAns[n];else delete S.answers[n];renderAll()})});
 }
 
-document.getElementById('prevBtn').addEventListener('click',function(){if(S.idx>0){S.idx--;renderAll()}});
-document.getElementById('nextBtn').addEventListener('click',function(){var qs=filterQs();if(S.idx<qs.length-1){S.idx++;renderAll()}});
+document.getElementById('prevBtn').addEventListener('click',function(){cancelCountdown();if(S.idx>0){S.idx--;renderAll()}});
+document.getElementById('nextBtn').addEventListener('click',function(){cancelCountdown();var qs=filterQs();if(S.idx<qs.length-1){S.idx++;renderAll()}});
+function startCountdown(){
+  cancelCountdown();
+  var cd=document.getElementById('cdBadge'),n=3;
+  cd.style.display='flex';cd.textContent=n;
+  function tick(){
+    n--;if(n<=0){cd.style.display='none';cd.textContent='';var qs=filterQs();if(S.idx<qs.length-1){S.idx++;renderAll()};COUNTDOWN=null}
+    else{cd.textContent=n;COUNTDOWN=setTimeout(tick,1000)}
+  }
+  COUNTDOWN=setTimeout(tick,1000);
+}
+function cancelCountdown(){
+  if(COUNTDOWN){clearTimeout(COUNTDOWN);COUNTDOWN=null}
+  var cd=document.getElementById('cdBadge');cd.style.display='none';cd.textContent='';
+}
 
 document.querySelectorAll('#modes button').forEach(function(b){b.addEventListener('click',function(){
   var m=b.dataset.mode;if(m==='exam'){document.getElementById('examModal').classList.add('show');return}
@@ -342,13 +384,13 @@ document.getElementById('restoreAll').addEventListener('click',function(){S.cut=
 document.getElementById('submitExam').addEventListener('click',function(){if(confirm('交卷？'))finishExam()});
 
 document.addEventListener('keydown',function(e){
-  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();if(S.idx>0){S.idx--;renderAll()}}
-  else if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();var qs=filterQs();if(S.idx<qs.length-1){S.idx++;renderAll()}}
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();cancelCountdown();if(S.idx>0){S.idx--;renderAll()}}
+  else if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();cancelCountdown();var qs=filterQs();if(S.idx<qs.length-1){S.idx++;renderAll()}}
 });
 
 var tx=0,ty=0;
 document.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY});
-document.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50){var qs=filterQs();if(dx<0&&S.idx<qs.length-1){S.idx++;renderAll()}else if(dx>0&&S.idx>0){S.idx--;renderAll()}}});
+document.addEventListener('touchend',function(e){var dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50){cancelCountdown();var qs=filterQs();if(dx<0&&S.idx<qs.length-1){S.idx++;renderAll()}else if(dx>0&&S.idx>0){S.idx--;renderAll()}}});
 
 function openQNav(){
   var qs=filterQs(),g=document.getElementById('qnavGrid'),h='';
@@ -390,7 +432,17 @@ function finishExam(){
 function exitExam(){S.mode='sequential';S.examQs=[];S.examAns={};if(S.examTimer)clearInterval(S.examTimer);document.getElementById('examResult').classList.remove('show');document.getElementById('examResult').innerHTML='';document.getElementById('bottomNav').style.display='flex';S.idx=0;renderAll()}
 
 document.getElementById('t').textContent=QUIZ_TITLE;
-load();renderAll();
+// Check for existing users and show login
+(function initLogin(){
+  var keys=[];
+  try{ for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);var m=k.match(new RegExp('^qz_'+QUIZ_ID+'_(.+)$'));if(m)keys.push(m[1])} }catch(e){}
+  if(keys.length>0){
+    var hint=document.getElementById('loginHint');
+    hint.textContent='已有密钥：'+keys.join('、')+'（输入任意密钥进入）';
+  }
+  document.getElementById('loginInput').addEventListener('keydown',function(e){if(e.key==='Enter')login(this.value)});
+  document.getElementById('loginInput').focus();
+})();
 </script>
 </body>
 </html>
