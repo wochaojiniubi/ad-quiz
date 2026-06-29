@@ -131,14 +131,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
   <!-- Login Form -->
   <div id="formLogin">
-    <input id="loginKey" placeholder="输入你的密钥" style="width:100%;padding:14px;border:1px solid #e5e7eb;border-radius:10px;font-size:15px;margin-bottom:12px">
-    <button onclick="doLogin()" style="width:100%;padding:14px;background:#212529;color:#fff;border:none;border-radius:10px;font-size:15px;cursor:pointer">进入</button>
-    <p id="loginError" style="font-size:12px;color:#ef4444;margin-top:8px;display:none"></p>
+    <div id="loginUserList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px"></div>
+    <div style="margin-top:8px">
+      <input id="loginUser" placeholder="用户名" style="width:100%;padding:14px;border:1px solid #e5e7eb;border-radius:10px;font-size:15px;margin-bottom:8px">
+      <input id="loginPass" type="password" placeholder="密码" style="width:100%;padding:14px;border:1px solid #e5e7eb;border-radius:10px;font-size:15px;margin-bottom:12px">
+      <button onclick="doLogin()" style="width:100%;padding:14px;background:#212529;color:#fff;border:none;border-radius:10px;font-size:15px;cursor:pointer">登录</button>
+      <p id="loginError" style="font-size:12px;color:#ef4444;margin-top:8px;display:none"></p>
+    </div>
+    <button onclick="switchAuthTab('register')" style="width:100%;padding:14px;background:#fff;color:#7e22ce;border:2px dashed #7e22ce;border-radius:10px;font-size:15px;cursor:pointer;margin-top:12px">+ 注册新用户</button>
   </div>
   <!-- Register Form -->
   <div id="formRegister" style="display:none">
-    <input id="regCode" placeholder="输入邀请码" style="width:100%;padding:14px;border:1px solid #e5e7eb;border-radius:10px;font-size:15px;margin-bottom:12px">
-    <input id="regKey" placeholder="设置你的密钥（登录用）" style="width:100%;padding:14px;border:1px solid #e5e7eb;border-radius:10px;font-size:15px;margin-bottom:12px">
+    <input id="regCode" placeholder="输入邀请码" style="width:100%;padding:14px;border:1px solid #e5e7eb;border-radius:10px;font-size:15px;margin-bottom:8px">
+    <input id="regUser" placeholder="设置用户名" style="width:100%;padding:14px;border:1px solid #e5e7eb;border-radius:10px;font-size:15px;margin-bottom:8px">
+    <input id="regPass" type="password" placeholder="设置密码" style="width:100%;padding:14px;border:1px solid #e5e7eb;border-radius:10px;font-size:15px;margin-bottom:12px">
     <button onclick="doRegister()" style="width:100%;padding:14px;background:#7e22ce;color:#fff;border:none;border-radius:10px;font-size:15px;cursor:pointer">注册</button>
     <p id="regError" style="font-size:12px;color:#ef4444;margin-top:8px;display:none"></p>
   </div>
@@ -266,19 +272,28 @@ function switchAuthTab(t){
   document.getElementById('regError').style.display='none';
 }
 function doLogin(){
-  var k=document.getElementById('loginKey').value.trim();
-  if(!k){ document.getElementById('loginError').textContent='请输入密钥';document.getElementById('loginError').style.display='block';return }
-  if(!localStorage.getItem(sk())){ document.getElementById('loginError').textContent='密钥不存在，请先注册';document.getElementById('loginError').style.display='block';return }
-  enterQuiz(k);
+  var u=document.getElementById('loginUser').value.trim();
+  var p=document.getElementById('loginPass').value.trim();
+  var el=document.getElementById('loginError');
+  if(!u){el.textContent='请输入用户名';el.style.display='block';return}
+  if(!p){el.textContent='请输入密码';el.style.display='block';return}
+  var savedPwd=localStorage.getItem('qz_'+QUIZ_ID+'_'+u+'_pwd');
+  if(!savedPwd){el.textContent='用户名不存在，请先注册';el.style.display='block';return}
+  if(p!==savedPwd){el.textContent='密码错误';el.style.display='block';return}
+  enterQuiz(u);
 }
 function doRegister(){
   var code=document.getElementById('regCode').value.trim();
-  var k=document.getElementById('regKey').value.trim();
-  if(!code){ document.getElementById('regError').textContent='请输入邀请码';document.getElementById('regError').style.display='block';return }
-  if(!k){ document.getElementById('regError').textContent='请设置密钥';document.getElementById('regError').style.display='block';return }
-  if(!VALID_CODES.includes(code)){ document.getElementById('regError').textContent='邀请码无效';document.getElementById('regError').style.display='block';return }
-  if(localStorage.getItem(sk())){ document.getElementById('regError').textContent='密钥已存在，请直接登录';document.getElementById('regError').style.display='block';return }
-  enterQuiz(k);
+  var u=document.getElementById('regUser').value.trim();
+  var p=document.getElementById('regPass').value.trim();
+  var el=document.getElementById('regError');
+  if(!code){el.textContent='请输入邀请码';el.style.display='block';return}
+  if(!u){el.textContent='请设置用户名';el.style.display='block';return}
+  if(!p){el.textContent='请设置密码';el.style.display='block';return}
+  if(!VALID_CODES.includes(code)){el.textContent='邀请码无效';el.style.display='block';return}
+  if(localStorage.getItem('qz_'+QUIZ_ID+'_'+u+'_pwd')){el.textContent='用户名已存在';el.style.display='block';return}
+  localStorage.setItem('qz_'+QUIZ_ID+'_'+u+'_pwd',p);
+  enterQuiz(u);
 }
 function enterQuiz(key){
   USER_KEY=key; load(); renderAll();
@@ -291,8 +306,7 @@ function switchUser(){
   document.getElementById('authOverlay').style.display='flex';
   document.getElementById('appContent').style.display='none';
   document.body.style.overflow='hidden';
-  document.getElementById('loginKey').value='';document.getElementById('loginError').style.display='none';
-  listExistingUsers();
+  switchAuthTab('login');renderLoginUsers();listExistingUsers();
 }
 
 function allQs(){ return QUESTIONS.slice(); }
@@ -490,10 +504,15 @@ function listExistingUsers(){
   el.textContent=keys.length>0?'已有用户：'+keys.join('、'):'';
 }
 listExistingUsers();
-document.getElementById('loginKey').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin()});
-document.getElementById('regCode').addEventListener('keydown',function(e){if(e.key==='Enter')doRegister()});
-document.getElementById('regKey').addEventListener('keydown',function(e){if(e.key==='Enter')doRegister()});
-document.getElementById('loginKey').focus();
+document.getElementById('loginPass').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin()});
+document.getElementById('regPass').addEventListener('keydown',function(e){if(e.key==='Enter')doRegister()});
+renderLoginUsers();
+function renderLoginUsers(){
+  var keys=[],el=document.getElementById('loginUserList'),h='';
+  try{ for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);var m=k.match(new RegExp('^qz_'+QUIZ_ID+'_(.+)$'));if(m)keys.push(m[1])} }catch(e){}
+  keys.forEach(function(key){ h+='<button onclick=\"enterQuiz(\\\''+key+'\\\')\" style=\"padding:14px;background:#212529;color:#fff;border:none;border-radius:10px;font-size:15px;cursor:pointer;text-align:left\">👤 '+key+'</button>' });
+  el.innerHTML=h||'<p style=\"font-size:13px;color:#999;text-align:center\">暂无用户，请先注册</p>';
+}
 </script>
 </div><!-- end appContent -->
 </body>
