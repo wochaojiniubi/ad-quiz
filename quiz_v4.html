@@ -71,7 +71,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .retry{display:inline-block;margin-top:8px;font-size:12px;color:#3b82f6;cursor:pointer}
 
 /* Cut */
-.cut{position:absolute;top:10px;right:10px;font-size:11px;padding:3px 10px;border:1px solid #f59e0b;background:#fff;color:#f59e0b;border-radius:12px;cursor:pointer;z-index:2}
+.cut{position:absolute;top:10px;right:10px;font-size:11px;padding:3px 10px;border:1px solid #f59e0b;background:#fff;color:#f59e0b;border-radius:12px;cursor:pointer;z-index:2;margin-left:20px}.qcard{padding-right:55px}
 .cut.on{background:#f59e0b;color:#fff}
 
 /* Bottom */
@@ -281,7 +281,6 @@ function renderQ(){
     h+='<div class=\"fb show '+(ans.correct?'good':'bad')+'\"><div class=\"fbl\">'+(ans.correct?'✓ 回答正确':'✗ 回答错误')+'</div>';
     if(!ans.correct) h+='<div>正确答案：<b>'+esc(q.answer)+'</b></div>';
     if(q.explanation) h+='<div style=\"margin-top:4px;color:#666\">'+esc(q.explanation)+'</div>';
-    if(q.module) h+='<div class=\"fbmod\">📚 '+esc(q.module)+'<br><span style=\"font-size:11px;color:#666\">'+getModuleInfo(q.module)+'</span></div>';
     h+='<span class=\"retry\" data-q=\"'+q.q+'\">重做</span></div>';
   }
   h+='</div>';main.innerHTML=h;bindEvts();
