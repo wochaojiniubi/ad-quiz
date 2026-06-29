@@ -131,9 +131,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
   <!-- Login Form -->
   <div id="formLogin">
-    <input id="loginKey" placeholder="输入你的密钥" style="width:100%;padding:14px;border:1px solid #e5e7eb;border-radius:10px;font-size:15px;margin-bottom:12px">
-    <button onclick="doLogin()" style="width:100%;padding:14px;background:#212529;color:#fff;border:none;border-radius:10px;font-size:15px;cursor:pointer">进入</button>
-    <p id="loginError" style="font-size:12px;color:#ef4444;margin-top:8px;display:none"></p>
+    <div id="loginUserList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px"></div>
+    <button onclick="switchAuthTab('register')" style="width:100%;padding:14px;background:#fff;color:#7e22ce;border:2px dashed #7e22ce;border-radius:10px;font-size:15px;cursor:pointer">+ 注册新用户</button>
   </div>
   <!-- Register Form -->
   <div id="formRegister" style="display:none">
@@ -291,8 +290,7 @@ function switchUser(){
   document.getElementById('authOverlay').style.display='flex';
   document.getElementById('appContent').style.display='none';
   document.body.style.overflow='hidden';
-  document.getElementById('loginKey').value='';document.getElementById('loginError').style.display='none';
-  listExistingUsers();
+  switchAuthTab('login');renderLoginUsers();listExistingUsers();
 }
 
 function allQs(){ return QUESTIONS.slice(); }
@@ -490,10 +488,15 @@ function listExistingUsers(){
   el.textContent=keys.length>0?'已有用户：'+keys.join('、'):'';
 }
 listExistingUsers();
-document.getElementById('loginKey').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin()});
 document.getElementById('regCode').addEventListener('keydown',function(e){if(e.key==='Enter')doRegister()});
 document.getElementById('regKey').addEventListener('keydown',function(e){if(e.key==='Enter')doRegister()});
-document.getElementById('loginKey').focus();
+renderLoginUsers();
+function renderLoginUsers(){
+  var keys=[],el=document.getElementById('loginUserList'),h='';
+  try{ for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);var m=k.match(new RegExp('^qz_'+QUIZ_ID+'_(.+)$'));if(m)keys.push(m[1])} }catch(e){}
+  keys.forEach(function(key){ h+='<button onclick=\"enterQuiz(\\\''+key+'\\\')\" style=\"padding:14px;background:#212529;color:#fff;border:none;border-radius:10px;font-size:15px;cursor:pointer;text-align:left\">👤 '+key+'</button>' });
+  el.innerHTML=h||'<p style=\"font-size:13px;color:#999;text-align:center\">暂无用户，请先注册</p>';
+}
 </script>
 </div><!-- end appContent -->
 </body>
