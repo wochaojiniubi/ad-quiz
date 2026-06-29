@@ -159,7 +159,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <div class="bottom" id="bottomNav">
   <button class="btn" id="prevBtn">← 上一题</button>
-  <span class="pos" id="pi">1/1</span>
+  <input type="number" id="pi" style="width:70px;text-align:center;border:1px solid #e5e7eb;border-radius:6px;padding:6px;font-size:13px" min="1" title="输入题号跳转">
   <button class="btn primary" id="nextBtn">下一题 →</button>
 </div>
 
@@ -259,8 +259,8 @@ function updateSub(){document.querySelectorAll('.subbar .filter button').forEach
 
 function renderQ(){
   var q=curQ(),qs=filterQs(),main=document.getElementById('main'),pi=document.getElementById('pi');
-  if(qs.length===0){main.innerHTML='<div style=\"text-align:center;padding:80px 20px;color:#aaa\">无题目</div>';pi.textContent='0/0';return}
-  pi.textContent=(S.idx+1)+'/'+qs.length;
+  if(qs.length===0){main.innerHTML='<div style=\"text-align:center;padding:80px 20px;color:#aaa\">无题目</div>';pi.value='';pi.placeholder='0/0';return}
+  pi.value=S.idx+1;pi.max=qs.length;
   var ans=(S.mode==='exam')?S.examAns[q.q]:S.answers[q.q],answered=!!ans,isCut=S.cut.indexOf(q.q)!==-1;
   var h='<div class=\"qcard'+(answered?(ans.correct?' answered':' failed'):'')+'\">';
   h+='<button class=\"cut'+(isCut?' on':'')+'\" data-q=\"'+q.q+'\">'+(isCut?'已斩':'斩')+'</button>';
@@ -311,6 +311,8 @@ function bindEvts(){
 
 document.getElementById('prevBtn').addEventListener('click',function(){if(S.idx>0){S.idx--;renderAll()}});
 document.getElementById('nextBtn').addEventListener('click',function(){var qs=filterQs();if(S.idx<qs.length-1){S.idx++;renderAll()}});
+document.getElementById('pi').addEventListener('keydown',function(e){if(e.key==='Enter'){var n=parseInt(this.value);var qs=filterQs();if(n>=1&&n<=qs.length){S.idx=n-1;renderAll()}else{renderAll()}}});
+document.getElementById('pi').addEventListener('blur',function(){renderAll()});
 
 document.querySelectorAll('#modes button').forEach(function(b){b.addEventListener('click',function(){
   var m=b.dataset.mode;if(m==='exam'){document.getElementById('examModal').classList.add('show');return}
